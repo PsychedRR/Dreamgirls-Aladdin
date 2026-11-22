@@ -1,0 +1,1105 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## Dreamgirl analysis film ver and theatre version
+
+This is the re-analysis for the dreamgirl dataset that was collected between 2017 to 2019, on various occasions, with two different stimuli - dreamgirls theatre, and dreamgirls film. And three testing set-up theatre - in theatre. Film - in groups and Film in isolated individuals.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(eyethinkphysiosync)
+library(eyethinkdata)
+library(tidyverse)
+library(afex)
+library(ggdist)
+library(ggsignif)
+library(explore)
+library(gghalves)
+library(GGally)
+library(afex)
+library(gtsummary)
+library(MCMCglmm)
+library(brms)
+library(easystats)
+library(rstanarm)
+library(faintr)
+library(emmeans)
+library(corrplot)
+library(ggside)
+library(ggsignif)
+library(psych)
+library(ggsci)
+library(lmerTest)
+```
+
+read in theatre data
+
+```{r}
+r_theatre = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/r.csv')
+rw_theatre = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/rw.csv')
+pd_theatre = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/td.csv')
+pd_theatre_from_rw = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/pd_from_rw.csv')
+```
+
+read in film data
+
+```{r}
+r_film = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/r.csv')
+rw_film = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/rw.csv')
+pd_film = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/td.csv')
+pd_film_from_rw = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/pd_film_from_rw.csv')
+```
+
+## IGNORE THIS SECTION test between conditions within each modalities
+
+```{#{r}
+#lmer(data = rw_theatre %>% filter(edv == 'HR' & item != 'interval'), DET ~ pgroup + #(1|pid1) + (1|item)) %>% summary()
+```
+
+```{#{r}
+#ggplot(data = rw_theatre %>% filter(edv == 'HR' & item != 'interval'), aes(x = win, y = DET, colour = pgroup)) + 
+  #geom_smooth(formula = y ~ splines::ns(x, 10)) +
+  #scale_fill_manual(values = c('#6f8278','#F9AE78','#BCBEDD')) + 
+  #scale_colour_manual(values = c('#6f8278','#F9AE78','#BCBEDD')) + 
+  #facet_wrap(~item, nrow = 2) + 
+  #jtools::theme_apa()
+```
+
+```{#{r}
+#lmer(data = rw_film %>% filter(edv == 'HR' & sgroup == 'in'), DET ~ condition + (1|pid1) + (1|pid2) + (1|win)) %>% summary()
+
+#ggplot(data = rw_film %>% filter(edv == 'HR' & sgroup == 'in'), aes(x = pgroup, y = DET, colour = condition)) + 
+  #geom_half_violin(side = 'R', position = position_identity(), alpha  = .8, draw_quantiles = .5,show.legend = FALSE) + 
+  #jtools::theme_apa()
+```
+
+## IGNORE THIS SECTION get rw_means format
+
+```{r}
+rw_means_theatre =  rw_theatre %>% group_by(pid1, pid2, sgroup, pgroup, item) %>% summarise(DET_win = mean(DET, na.rm = TRUE)) %>%
+  ungroup() %>%
+  filter(item != 'interval') %>%
+  group_by(pid1, pid2, sgroup, pgroup) %>% summarise(DET_win = mean(DET_win, na.rm = TRUE))
+    
+```
+
+```{r}
+rw_means_film = rw_film %>% group_by(pid1, pid2, sgroup, pgroup, condition) %>% summarise(DET_win = mean(DET, na.rm = TRUE)) %>% mutate(testing_occation = pgroup) %>% mutate(pgroup = ifelse(sgroup == 'in', condition, sgroup))
+```
+
+```{r}
+rw_means_theatre$pid1 = as.character(rw_means_theatre$pid1)
+rw_means_theatre$pid2 = as.character(rw_means_theatre$pid2)
+rw_means_cbind1 = rbind(rw_means_theatre, rw_means_film)
+```
+
+```{r}
+lmer(data = rw_means_film %>% filter(sgroup == 'in'), DET_win ~ testing_occation + (1|pid1)) %>% summary() 
+```
+
+```{r}
+lmer(data = rw_means_cbind1 %>% filter(sgroup == 'in' & pgroup != 'journo'), DET_win ~ pgroup + (1|pid1)) %>% summary() 
+```
+
+## IGNORE THIS SECTION load in the self-reports
+
+```{r}
+theatre_sr = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/dreamgirls_theatre/particpant_log.csv')
+```
+
+```{r}
+pd_theatre_sr = left_join(pd_theatre %>% select(condition, item, pid, eid) %>% filter(item == 'act1'), theatre_sr %>% mutate(serial = toupper(serial)), by = c('condition' = 'session', 'eid' = 'serial')) %>% select(-item)
+pd_theatre_from_rw_mean_acts = pd_theatre_from_rw %>% select(-X) %>% filter(item != 'interval' & pgroup != 'out') %>% group_by(pid) %>% summarise(DET = mean(DET))
+```
+
+```{r}
+pd_theatre_sr = left_join(pd_theatre_from_rw_mean_acts, pd_theatre_sr, by = 'pid')
+pd_theatre_sr_encore = pd_theatre_sr %>% filter(condition == 'encore')
+```
+
+```{r}
+M = cor(pd_theatre_sr_encore[,2], pd_theatre_sr_encore[,c(14:38)], use = "complete.obs")
+
+pd_theatre_sr_encore = pd_theatre_sr_encore %>% mutate(emo = (emo3+ emo4 + emo5), spiritual = (spiritual6 + spiritual7 + spiritual8), social = (social9 + social10 + social11 + social12), captivation = (captive1 + captive2))
+M1 = cor(pd_theatre_sr_encore[,2], pd_theatre_sr_encore[,c(39:42)], use = "complete.obs")
+```
+
+```{r}
+film_sr = readxl::read_xlsx('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/dreamgirls_movie/small groups 6 Dec 2018, Marian/participant_data.xlsx')
+```
+
+```{r}
+film_sr = film_sr %>% mutate(pid = sub("(.*?\\w_\\w+)[\\[_].*", "\\1", pid))
+film_sr = film_sr %>% mutate(pid = substr(pid, 1, 17))
+
+```
+
+```{r}
+film_sr_clean = film_sr %>% select(pid, c(distracted:social12))
+```
+
+```{r}
+pd_film_sr = left_join(pd_film_from_rw %>% filter(pgroup != 'out'), film_sr_clean, by = 'pid')
+```
+
+```{r}
+pd_film_sr = pd_film_sr %>% mutate(testing_occation = pgroup, pgroup = ifelse(pgroup == '0', 'alone', 'group'))
+```
+
+```{r}
+M2 = cor(pd_film_sr[pd_film_sr$pgroup == 'group',4], pd_film_sr[pd_film_sr$pgroup == 'group',c(18:29)], use = "complete.obs")
+M2
+
+M3 = cor(pd_film_sr[pd_film_sr$pgroup == 'alone',4], pd_film_sr[pd_film_sr$pgroup == 'alone',c(18:29)], use = "complete.obs")
+M3
+```
+
+## IGNORE THIS SECTION combine pd
+
+```{r}
+pd_full = bind_rows(pd_theatre_sr %>% select(-c(4:13)) %>% mutate(pid = as.character(pid)) %>% mutate(pgroup = 'theatre'), pd_film_sr %>% select(-X) %>% mutate(tipi7 = ifelse(is.character(tipi7), 7, tipi7)) %>% mutate(tipi9 = ifelse(is.character(tipi9), 7, tipi9)))
+
+```
+
+```{r}
+lm(data = pd_full, DET ~ pgroup) %>% summary()
+```
+
+```{r}
+pd_full_sr = pd_full %>% filter(!is.na(distracted))
+```
+
+```{r}
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), captive1 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), captive2 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), emo3 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), emo4 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), emo5 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), spiritual6 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), spiritual7 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), spiritual8 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), social9 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), social10 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), social11 ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), social12 ~ pgroup) %>% summary()
+```
+
+```{r}
+pd_full_sr = pd_full_sr %>% mutate(captive = captive1 + captive2) %>% mutate(emo = emo3 + emo4 + emo5) %>% mutate(spiritual = spiritual6 + spiritual7 + spiritual8) %>% mutate(social = social9 + social10 + social11 + social12)
+```
+
+```{r}
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), captive ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), emo ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), spiritual ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), social ~ pgroup) %>% summary()
+```
+
+```{r}
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), distracted ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), confidentenjoy ~ pgroup) %>% summary()
+lm(data = pd_full_sr %>% filter(pgroup != 'alone'), excitement ~ pgroup) %>% summary()
+```
+
+```{r}
+pd_full_sr[pd_full_sr$pgroup != 'alone',c(2,4:28)] %>% scree(pc=F) # 3
+```
+
+```{r}
+factanal(pd_full_sr[pd_full_sr$pgroup != 'alone',c(2,4:6,17:28)], factors = 3, scores='regression', rotation = 'promax') -> FA_mod1
+```
+
+```{r}
+loadings(FA_mod1)
+loadings = as.tibble(FA_mod1$loadings[,]) 
+```
+
+```{r}
+loadings$Variable <- colnames(pd_full_sr[pd_full_sr$pgroup != 'alone',c(2,4:6,17:28)])  # Add variable names
+
+
+# Convert to long format for ggplot
+loadings_long <- loadings %>% pivot_longer(cols = -Variable, names_to = "Factor", values_to = "Loading")
+```
+
+```{r}
+ggplot(loadings_long, aes(x = Variable, y = abs(Loading), fill = Loading)) +
+  facet_wrap(~Factor, nrow = 1) + 
+  geom_bar(stat = "identity", position = "dodge") +  # Dodge = side-by-side bars
+  labs(title = "Factor Loadings for Each Item", x = "Item", y = "Loading") +
+  jtools::theme_apa() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis label
+  scale_fill_gradient2(high = '#6f8278', mid = 'white', low = '#D15500', midpoint = 0) +
+  #scale_fill_manual(values = c('#6f8278', '#D15500)) + 
+  #scale_colour_manual(values = c('#6f8278','#F9AE78',, '#D15500')) + 
+  coord_flip()
+
+ggplot(loadings_long, aes(x = Factor, y = Variable, fill = Loading)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  labs(title = "Factor Loadings Heatmap", x = "Factor", y = "Variable") +
+  theme_minimal()
+
+ggplot(loadings_long, aes(x = Factor, y = Loading, fill = Variable)) +
+  geom_bar(stat = "identity") +
+  coord_polar() +  # Turns into a circular plot
+  theme_minimal()
+```
+
+```{r}
+p_ <- GGally::print_if_interactive
+p1 = ggpairs(pd_full_sr[pd_full_sr$pgroup != 'alone',c(2,4:6,17:28)])
+p_(p1)
+```
+
+```{r}
+
+```
+
+# IGNORE THIS SECTION replicate the above with old crqa param?
+
+read in theatre data
+
+```{r}
+r_theatre_old = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/r.csv') 
+rw_theatre_old = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/rw.csv') 
+pd_theatre_old = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/td.csv') 
+pd_theatre_from_rw_old = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/pd_from_rw_oldparam.csv')
+```
+
+read in film data
+
+```{r}
+r_film_2 = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/r.csv') 
+rw_film_2 = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/rw.csv') 
+pd_film_2 = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/td.csv') 
+pd_film_from_rw_2 = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/pd_film_from_rw.csv')
+```
+
+## IGNORE THIS SECTION join the two formats
+
+## IGNORE THIS SECTION test within each modalities between conditions
+
+```{r}
+#lmer(data = rw_theatre_old %>% filter(edv == 'HR' & item != 'interval'), DET ~ pgroup + (1|pid1) + (1|item) + (1|win)) %>% summary()
+```
+
+```{r}
+#lmer(data = rw_film_2 %>% filter(edv == 'HR' & sgroup == 'in'), DET ~ condition + (1|pid1)) %>% summary()
+```
+
+```{r}
+rw_means_theatre_old =  rw_theatre_old %>% group_by(pid1, pid2, sgroup, pgroup, item) %>% summarise(DET_win = mean(DET, na.rm = TRUE)) %>%
+  ungroup() %>%
+  filter(item != 'interval') %>%
+  group_by(pid1, pid2, sgroup, pgroup) %>% summarise(DET_win = mean(DET_win, na.rm = TRUE))
+```
+
+```{r}
+rw_means_film_old = rw_film_2 %>% group_by(pid1, pid2, sgroup, pgroup, condition) %>% summarise(DET_win = mean(DET, na.rm = TRUE)) %>% mutate(testing_occation = pgroup) %>% mutate(pgroup = ifelse(sgroup == 'in', condition, sgroup))
+```
+
+```{r}
+rw_means_theatre_old$pid1 = as.character(rw_means_theatre_old$pid1)
+rw_means_theatre_old$pid2 = as.character(rw_means_theatre_old$pid2)
+rw_means_cbind_old = rbind(rw_means_theatre_old, rw_means_film_old)
+```
+
+```{r}
+lmer(data = rw_means_film_old %>% filter(sgroup == 'in'), DET_win ~ testing_occation + (1|pid1)) %>% summary() 
+```
+
+```{r}
+lmer(data = rw_means_cbind_old %>% filter(sgroup == 'in' & pgroup != 'journo' & pgroup != 'alone'), DET_win ~ pgroup + (1|pid1)) %>% summary() 
+```
+
+### IGNORE THIS SECTION load in self repo
+
+join from Pd_full with conservative param
+
+```{r}
+pd_full_both = left_join(pd_full, pd_theatre_from_rw_old %>% select(-X) %>% filter(item != 'interval' & pgroup != 'out') %>% group_by(pid) %>% summarise(DET = mean(DET)) %>% mutate(pid = as.character(pid)), by = 'pid', suffix = c('_conservrative', '_old'))
+```
+
+```{r}
+pd_full_both = left_join(pd_full_both, pd_film_from_rw_2 %>% select(-X) %>% filter(pgroup != 'out') %>% mutate(testing_occation = pgroup, pgroup = ifelse(pgroup == '0', 'alone', 'group')))
+```
+
+```{r}
+pd_full_both = pd_full_both %>% mutate(DET_old = ifelse(is.na(DET_old), DET, DET_old)) %>% select(-DET)
+pd_full_both = pd_full_both %>% mutate(condition = ifelse(is.na(condition), pgroup, condition))
+```
+
+```{r}
+lm(data = pd_full_both %>% filter(condition != 'journo'), DET_old ~ pgroup) %>% summary()
+```
+
+```{r}
+lm(data = pd_full_both, captive1 ~ pgroup) %>% summary()
+lm(data = pd_full_both, captive2 ~ pgroup) %>% summary()
+lm(data = pd_full_both, emo3 ~ pgroup) %>% summary()
+lm(data = pd_full_both, emo4 ~ pgroup) %>% summary()
+lm(data = pd_full_both, emo5 ~ pgroup) %>% summary()
+lm(data = pd_full_both, spiritual6 ~ pgroup) %>% summary()
+lm(data = pd_full_both, spiritual7 ~ pgroup) %>% summary()
+lm(data = pd_full_both, spiritual8 ~ pgroup) %>% summary()
+lm(data = pd_full_both, social9 ~ pgroup) %>% summary()
+lm(data = pd_full_both, social10 ~ pgroup) %>% summary()
+lm(data = pd_full_both, social11 ~ pgroup) %>% summary()
+lm(data = pd_full_both, social12 ~ pgroup) %>% summary()
+```
+
+```{r}
+pd_full_both[pd_full_both$pgroup != 'alone',c(4:28, 31)] %>% scree(pc=F) # 3
+```
+
+```{r}
+cor = pd_full_both[pd_full_both$pgroup != 'alone' & pd_full_both$condition != 'journo',c(4:28, 31)] %>% cor()
+```
+
+```{r}
+psych::KMO(cor)
+```
+
+```{r}
+factanal(pd_full_both[pd_full_both$pgroup != 'alone' & pd_full_both$condition != 'journo',c(4:28, 31)], factors = 3, scores='regression', rotation = 'promax') -> FA_mod2
+FA_mod2
+```
+
+```{r}
+loadings(FA_mod2)
+loadings2 = as.tibble(FA_mod2$loadings[,]) 
+```
+
+```{r}
+loadings2$Variable <- colnames(pd_full_both[pd_full_both$pgroup != 'alone' & pd_full_both$condition != 'journo',c(4:28, 31)])  # Add variable names
+
+
+# Convert to long format for ggplot
+loadings_long2 <- loadings2 %>% pivot_longer(cols = -Variable, names_to = "Factor", values_to = "Loading")
+```
+
+```{r}
+ggplot(loadings_long2, aes(x = Variable, y = abs(Loading), fill = Loading)) +
+  facet_wrap(~Factor, nrow = 1) + 
+  geom_bar(stat = "identity", position = "dodge") +  # Dodge = side-by-side bars
+  labs(title = "Factor Loadings for Each Item", x = "Item", y = "Loading") +
+  jtools::theme_apa() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis label
+  scale_fill_gradient2(high = '#6f8278', mid = 'white', low = '#D15500', midpoint = 0) +
+  #scale_fill_manual(values = c('#6f8278', '#D15500)) + 
+  #scale_colour_manual(values = c('#6f8278','#F9AE78',, '#D15500')) + 
+  coord_flip()
+```
+
+```{r}
+factanal(pd_full_both[pd_full_both$pgroup != 'alone' & pd_full_both$condition != 'journo',c(4:6, 17:28, 31)], factors = 3, scores='regression', rotation = 'promax') -> FA_mod3
+
+FA_mod3
+```
+
+```{r}
+# run this in console
+ggpairs(pd_full_both[pd_full_both$pgroup != 'alone' & pd_full_both$condition != 'journo',], columns = c(4:28, 31), ggplot2::aes(fill = pgroup))
+
+# 17:28 if not want tipi
+```
+
+## For publication - if df exist, start from here
+
+for getting num of participant
+
+```{r}
+unique(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid1)) # 20
+unique(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid2)) # 20
+
+setdiff(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid1), rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid2)) # 18 common, 2 only as pid1
+setdiff(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid2), rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'theatre') %>% pull(pid1)) # 18 common, 2 only as pid2
+
+# 22 in theatre
+
+unique(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid1)) # 29
+unique(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid2)) # 29
+
+setdiff(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid1), rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid2)) # 24 common, 5 only as pid1
+setdiff(rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid2), rw_means_cbind_old %>% filter(sgroup == 'in' & condition == 'group') %>% pull(pid1)) # 24 common, 5 only as pid2
+
+# 34 in group
+
+```
+
+### Baseline comparison
+
+```{r}
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), distracted ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), excitement ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), confidentenjoy ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), emo ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), captive ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), social ~ condition) %>% tbl_regression()
+lm(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), spiritual ~ condition) %>% tbl_regression()
+```
+
+```{r}
+pd_full_both = pd_full_both %>% mutate(captive = (captive1 + captive2)/2, emo = (emo3 + emo4 + emo5)/3, spiritual = (spiritual6 + spiritual7 + spiritual8)/3, social = (social9 + social10 + social11 + social12)/4)
+pd_full_both_sr_longer = pivot_longer(pd_full_both, cols = c(4:6, 32:35), names_to = 'item', values_to = 'response')
+```
+
+## result section 1 here
+
+```{r}
+
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), AE ~ condition)
+#just use a t test!
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), distracted ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), excitement ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), confidentenjoy ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), social ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), spiritual ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), emo ~ condition)
+t.test(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), captive ~ condition)
+```
+
+```{r}
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), distracted ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), excitement ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), confidentenjoy ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), social ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), spiritual ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), emo ~ condition)
+cohens_d(data = pd_full_both %>% filter(condition == 'encore'|condition == 'group'), captive ~ condition)
+```
+
+## result plot 1 here
+
+```{r}
+pd_full_both_sr_longer = pd_full_both_sr_longer %>% mutate(item = ifelse(item == 'distracted', 'focus', item))
+pd_full_both_sr_longer$item <- factor(pd_full_both_sr_longer$item, levels = c("focus", "excitement", "confidentenjoy", 'emo','captive','spiritual','social'))
+
+pd_full_both_sr_longer = pd_full_both_sr_longer %>% mutate(q_from = ifelse(item == 'focus'|item == 'excitement'|item == 'confidentenjoy', 'pre', 'post'))
+
+pd_full_both_sr_longer = pd_full_both_sr_longer %>% mutate(condition = ifelse(condition == 'encore', 'theatre' , condition)) %>% mutate(condition = ifelse(condition == 'group', 'film co-watch' , condition))
+```
+
+```{r}
+ggplot(data = pd_full_both_sr_longer %>% filter((condition == 'theatre'|condition == 'film co-watch')), aes(x = item, y = response, colour = condition, fill = condition)) + 
+  geom_half_violin(side = 'l', linewidth = 0,trim = FALSE, alpha = .7, position = position_nudge(x = -.1)) + stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 0,
+               position = position_nudge(x = -.1)) +
+  stat_interval(alpha = .5, aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.15)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.15)) +
+  #geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1) + 
+  #geom_half_point(side= 'r', shape = 95,  range_scale = 0, size = 2.5, width = 1, alpha = .5, position = position_dodge(.15)) +
+  ylab('Response') + xlab('Question item') + 
+  scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_x_discrete(labels = c('confidentenjoy' = 'confidence to enjoy', 'emo' = 'emotional')) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+guides(fill_ramp =  guide_none(), color_ramp =  guide_none()) + 
+  geom_signif(y_position = 7, xmin = c(0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8), xmax = c(1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2),
+    annotation = c('*', "***", "***", 'NS.', 'NS.', 'NS.', 'NS.'), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') + 
+  theme_ggdist() + 
+  theme(legend.position = 'top', axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+ggsave('qitem wide alt.png', width = 4000, height = 2000, units = 'px')
+```
+
+
+
+
+```{r}
+ggplot(data = pd_full_both_sr_longer %>% filter((condition == 'theatre'|condition == 'film co-watch')), aes(x = condition, y = response, colour = condition, fill = condition)) + 
+ geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .5, width = 1, position = position_dodge(.3)) +
+  #stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,
+               #geom = "crossbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),
+  #) +
+  #stat_summary(fun.data = mean_se,
+               #geom = "errorbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),linewidth = 0.75
+  #) +
+  stat_summary(fun.data = mean_se,
+               geom = "point", 
+               linewidth = 2,
+               position = position_dodge(width = .3)) +
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1) + 
+  geom_half_point(side= 'l', shape = 124, range_scale = 0, size = 3, width = 1, alpha = .5) +
+  ggsignif::geom_signif(comparisons = list(c('theatre', 'film co-watch')), colour = 'black', y_position = 6.1, map_signif_level = TRUE, tip_length = 0) + 
+  ylab('Value') + xlab('Item') + 
+  coord_flip() + 
+  jtools::theme_apa(legend.pos = 'bottomright') +
+  scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + 
+  facet_wrap(~item) +
+  theme(text = element_text(size = 24), axis.text = element_text(size = 24), legend.text = element_text(size = 24), axis.title.x = element_text(size = 24), axis.title.y = element_text(size = 24), strip.text.x = element_text(size = 24))
+pre
+ggsave("q.jpg", width = 4000, height = 3000, units = 'px')
+
+```
+
+## breakdown group sizes result section 1.2
+
+```{r}
+pd_full_both = pd_full_both %>% 
+  mutate(group_size = recode(condition, 'encore' = 12, 
+                                                           'group' = 6,
+                                                           'journo' = 10,
+                                                           'alone' = 1)) %>%
+  mutate(testing_occation = ifelse(is.na(testing_occation), '-1', testing_occation)) %>%
+  mutate(group_size = ifelse(testing_occation == 5, 11, group_size)) %>% 
+  mutate(group_size_categorical = recode(group_size, '12' = 'large', '11' = 'large', '10' = 'large', '6' = 'small', '1' = 'alone')) %>%
+  mutate(stim = ifelse(testing_occation == -1, 'theatre', 'film'))
+
+pd_full_both = pd_full_both %>% mutate(group_size = ifelse(pgroup == 'theatre', 1100, group_size), group_size_categorical = ifelse(pgroup == 'theatre', 'extra', group_size_categorical))
+```
+
+```{r}
+t.test(data = pd_full_both %>% filter(condition == 'group'), distracted ~ group_size)
+t.test(data = pd_full_both %>% filter(condition == 'group'), excitement ~ group_size)
+t.test(data = pd_full_both %>% filter(condition == 'group'), confidentenjoy ~ group_size)#** 
+ggplot(data = pd_full_both %>% filter(condition == 'group'), aes(x = as.factor(group_size), y = confidentenjoy)) + geom_half_violin()
+t.test(data = pd_full_both %>% filter(condition == 'group'), social ~ group_size) #**
+ggplot(data = pd_full_both %>% filter(condition == 'group'), aes(x = as.factor(group_size), y = social)) + geom_half_violin()
+t.test(data = pd_full_both %>% filter(condition == 'group'), spiritual ~ group_size) #**
+ggplot(data = pd_full_both %>% filter(condition == 'group'), aes(x = as.factor(group_size), y = spiritual)) + geom_half_violin()
+t.test(data = pd_full_both %>% filter(condition == 'group'), emo ~ group_size) #**
+ggplot(data = pd_full_both %>% filter(condition == 'group'), aes(x = as.factor(group_size), y = emo)) + geom_half_violin()
+t.test(data = pd_full_both %>% filter(condition == 'group'), captive ~ group_size) #**
+ggplot(data = pd_full_both %>% filter(condition == 'group'), aes(x = as.factor(group_size), y = captive)) + geom_half_violin()
+```
+
+```{r}
+lm(data = pd_full_both %>% filter(condition == 'group'), social ~ group_size) %>% summary()
+lm(data = pd_full_both %>% filter(condition == 'group'), spiritual ~ group_size) %>% summary()
+lm(data = pd_full_both %>% filter(condition == 'group'), emo ~ group_size) %>% summary()
+lm(data = pd_full_both %>% filter(condition == 'group'), captive ~ group_size) %>% summary()
+
+t.test(data = pd_full_both %>% filter(group_size_categorical == 'small'|group_size_categorical == 'extra'), social ~ group_size) # this is sig, actually interesting
+t.test(data = pd_full_both %>% filter(group_size_categorical == 'small'|group_size_categorical == 'extra'), spiritual ~ group_size) 
+t.test(data = pd_full_both %>% filter(group_size_categorical == 'small'|group_size_categorical == 'extra'), emo ~ group_size)
+t.test(data = pd_full_both %>% filter(group_size_categorical == 'small'|group_size_categorical == 'extra'), captive ~ group_size)
+
+ggplot(data = pd_full_both_sr_longer %>% filter(condition == 'film co-watch' & q_from == 'post'), aes(x = group_size, y = response, colour = item)) + geom_smooth(method = lm, alpha = .1) + geom_point() + theme_ggdist() + scale_color_startrek(name = "Question Item",
+                       labels = c("emo" = "Emotion",
+                                  "captive" = "Captive",
+                                  "spiritual" = "Spiritual",
+                                  'social'= 'Social')) + scale_x_continuous(name = 'Group Size')
+
+ggsave('Post Item Group size.png', width = 1920, height = 1440, units = 'px')
+
+```
+
+```{r}
+rw_means_cbind_group_only <- rw_means_cbind_old %>% filter(pgroup == 'group') %>% mutate(group_size_num = recode(testing_occation, '1' = 6, '2' = 6, '3' = 6, '4' = 6, '5' = 11))
+
+lm(data = rw_means_cbind_group_only, DET_win ~ group_size_num) %>% summary()
+
+ggplot(data = rw_means_cbind_group_only, aes(x = as.factor(group_size_num), y = DET_win, colour = as.factor(group_size_num), fill = as.factor(group_size_num))) + 
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7, width = .75, position = position_dodge(.3)) +
+  #stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,
+               #geom = "crossbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),
+  #) +
+  #stat_summary(fun.data = mean_se,
+               #geom = "errorbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),linewidth = 0.75
+  #) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 2,
+               position = position_dodge(width = .3), linetype = 'blank') + 
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1) + 
+  geom_half_point(side= 'l', shape = 124,
+    range_scale = 0,
+   size = 3.5,
+   width = 1,
+   alpha = .5) +
+  ylab('HR synchrony') + xlab('group size') + 
+  coord_flip() + 
+  theme_ggdist() +
+  scale_fill_manual(name = 'group size',values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(name = 'group size', values = c('#51A3BC','#FF5F2E')) + 
+  geom_signif(annotations = c('***'), xmin = 1, xmax = 2, y_position = 78, colour = 'black', map_signif_level = TRUE, tip_length = 0)  + 
+  #scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+ggsave('group_size_DET.png', width = 1920, height = 1440, units = 'px')
+
+
+
+group_size_mx = lmerMultiMember::weights_from_columns(rw_means_cbind_group_only[,c('pid1','pid2')])
+mod_mm_det_size  <- lmerMultiMember::lmer(data = rw_means_cbind_group_only, DET_win ~ group_size + (1|pair), memberships = list(pair = group_size_mx)) 
+mod_mm_det_size %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+```
+
+
+
+```{r}
+rw_means_cbind_old <- rw_means_cbind_old %>% mutate(group_size = ifelse(testing_occation != 5 & condition == 'group', 'small', 'large'))
+
+lm(data = rw_means_cbind_old %>% filter(condition == 'group' & sgroup == 'in'), DET_win ~ group_size) %>% emmeans(specs = 'group_size')
+
+group_size_mx = lmerMultiMember::weights_from_columns(subset(rw_means_cbind_old, condition == 'group' & sgroup == 'in')[,c('pid1','pid2')])
+
+library(lmerMultiMember)
+mod_mm_2  <- lmerMultiMember::lmer(data = subset(rw_means_cbind_old, condition == 'group' & sgroup == 'in'), DET_win ~ group_size + (1|pair), memberships = list(pair = group_size_mx)) 
+mod_mm_2 %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Satterthwaite')
+emmeans(mod_mm_2, specs = 'group_size')
+
+```
+
+
+## plot for timecourse synchrony
+
+```{r}
+rw_cbind_old = rbind(rw_theatre_old %>% select(pid1, pid2, pinfo1, pinfo2, sgroup, pgroup, win, category, item, DET), rw_film_2 %>% select(pid1,pid2, pinfo1, pinfo2, sgroup, pgroup, win, category, item, DET))
+```
+
+```{r}
+rw_cbind_old = rw_cbind_old %>% mutate(win = ifelse(item == 'act2', win + 1425, win)) %>% filter(item != 'interval')
+```
+
+```{r}
+timecourse = ggplot(data = rw_cbind_old %>% filter(sgroup == 'in' & pgroup != 'alone'), aes(x = win, y = DET, colour = category, fill = category)) + geom_smooth(formula = y ~ splines::ns(x, 16)) + jtools::theme_apa() + scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + ylab(label = 'HR synchrony') + xlab(label = 'Timecourse Window')
+
+ggsave('timecourse.png', timecourse, width = 1920, height = 1440, units = 'px')
+```
+
+## timecourse synchrony comparison result section 2
+
+```{r}
+rw_means_cbind_old_no_alone = rw_means_cbind_old %>% filter(condition != 'alone')
+rw_means_cbind_old_no_alone$condition = as.factor(rw_means_cbind_old_no_alone$condition)
+contrasts(rw_means_cbind_old_no_alone$condition) = contr.sum(2)
+contrasts(rw_means_cbind_old_no_alone$condition)
+lmer(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), DET_win ~ condition + (1|pid1)) %>% summary()
+```
+
+```{r}
+membership_mx = lmerMultiMember::weights_from_columns(subset(rw_means_cbind_old, condition == 'theatre'|condition == 'group')[,c('pid1','pid2')])
+
+library(lmerMultiMember)
+mod_mm_1  <- lmerMultiMember::lmer(data = subset(rw_means_cbind_old, condition == 'theatre'|condition == 'group'), DET_win ~ condition + (1|pair), memberships = list(pair = membership_mx)) 
+mod_mm_1 %>% summary(ddf = 'Kenward-Roger')
+emmeans(mod_mm_1, specs = 'condition')
+
+
+ggplot(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), aes(x = condition, y = DET_win, colour = condition, fill = condition)) + 
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7, position = position_dodge(.3)) +
+  #stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,
+               #geom = "crossbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),
+  #) +
+  #stat_summary(fun.data = mean_se,
+               #geom = "errorbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),linewidth = 0.75
+  #) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 2,
+               position = position_dodge(width = .3), shape = 18) + 
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1, notch = TRUE,  whisker.linewidth = 1.25, staplewidth = .25, staple.linewidth = 1) + 
+  #geom_half_point(side= 'l', shape = 124,range_scale = 0, size = 3.5, width = 1,   alpha = .5) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  coord_flip() + 
+  theme_ggdist() +
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  geom_signif(comparisons = list(c('theatre', 'group')), y_position = 79, colour = 'black', map_signif_level = TRUE, tip_length = 0, annotations = '*')  + 
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+
+
+ggsave('DET_win.png', width = 2500, height = 1440, units = 'px')
+```
+
+
+## run in x out group comparison
+
+```{r}
+# need to go back to the rw means rbind to include one more identifier so that one can remove the alone group?
+# no testing occasion - in => theatre (-1)
+
+rw_means_cbind_old = rw_means_cbind_old %>% mutate(condition = ifelse(is.na(condition), 'theatre', condition)) %>% mutate(testing_occation = ifelse(is.na(testing_occation), '-1', testing_occation))
+
+rw_means_cbind_old = rw_means_cbind_old %>% mutate(testing_occation = ifelse(pgroup == 'journo', '-2', testing_occation)) %>% mutate(testing_occation = ifelse(sgroup == 'out', 'out', testing_occation))
+```
+
+```{r}
+lmer(data = rw_means_cbind_old_no_alone, DET_win ~ sgroup * condition + (1|pid1)) %>% summary()
+```
+
+## result plot 3 here
+
+```{r}
+pgroup_mx = lmerMultiMember::weights_from_columns(subset(rw_means_cbind_old, condition != 'alone')[,c('pid1','pid2')])
+
+library(lmerMultiMember)
+mod_mm_3  <- lmerMultiMember::lmer(data = subset(rw_means_cbind_old, condition != 'alone'), DET_win ~ sgroup*condition + (1|pair), memberships = list(pair = pgroup_mx)) 
+mod_mm_3 %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+emmeans(mod_mm_3, by = 'condition', specs = 'sgroup')
+
+
+film_mx = lmerMultiMember::weights_from_columns(subset(rw_means_cbind_old, condition == 'group')[,c('pid1','pid2')])
+mod_mm_film <- lmerMultiMember::lmer(data = subset(rw_means_cbind_old, condition == 'group'), DET_win ~ sgroup + (1|pair), memberships = list(pair = film_mx)) 
+mod_mm_film %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+
+theatre_mx = lmerMultiMember::weights_from_columns(subset(rw_means_cbind_old, condition == 'theatre')[,c('pid1','pid2')])
+mod_mm_thea <- lmerMultiMember::lmer(data = subset(rw_means_cbind_old, condition == 'theatre'), DET_win ~ sgroup + (1|pair), memberships = list(pair = theatre_mx)) 
+mod_mm_thea %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+
+
+ggplot(data = rw_means_cbind_old %>% filter(condition != 'alone'), aes(x = condition, y = DET_win, colour = sgroup, fill = sgroup)) +  
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7, position = position_nudge(x = .1)) + stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 0,
+               position = position_nudge(x = .1)) +
+  geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1) +
+  #geom_half_point(side= 'l', shape = 124, range_scale = 0, size = 2.5,   width = 1, alpha = .5, position = position_dodge(.15)) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  scale_fill_manual(name = 'pair info', labels = c('Co-present', 'Pseudo-pair'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(name = 'pair info', labels = c('Co-present', 'Pseudo-pair'), values = c('#51A3BC','#FF5F2E')) +
+  geom_signif(y_position = 79, xmin = c(0.8, 1.9), xmax = c(1.2, 2.3),
+    annotation = c("***", "***"), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') +
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  coord_flip() + 
+  theme_ggdist() + theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+  
+
+ggsave('pgroup.png', width = 2500, height = 1440, units = 'px')
+```
+
+## Exploratory bits
+
+### corr matrix
+
+```{r}
+library(corrplot)
+p.mat = cor_pmat(pd_full_both %>% filter(pgroup != 'alone' & condition != 'journo') %>% select(c(4:6, 32:35, 31)))
+
+corrplot(cor(pd_full_both %>% filter(pgroup != 'alone' & condition != 'journo') %>% select(c(4:6, 32:35, 31))), method = 'ellipse', type = 'lower', p.mat = p.mat, insig = 'blank', addCoef.col = 'black', tl.col = 'black', diag = FALSE, col = colorRampPalette(c('#0F98B0','#EA5514'))(100))
+
+simple_corr_result = Hmisc::rcorr(as.matrix(pd_full_both %>% filter(pgroup != 'alone' & condition != 'journo') %>% select(c(4:6, 32:35, 31))))
+
+
+```
+
+### spliting the modalities
+
+```{r}
+p.mat_theatre = cor_pmat(pd_full_both %>% filter(condition == 'encore') %>% select(c(4:6, 32:35, 31)))
+p.mat_film = cor_pmat(pd_full_both %>% filter(condition == 'group') %>% select(c(4:6, 32:35, 31)))
+
+corrplot(cor(pd_full_both %>% filter(condition == 'encore') %>% select(c(4:6, 32:35, 31))), method = 'ellipse', type = 'lower', p.mat = p.mat_theatre, insig = 'blank', addCoef.col = 'black', tl.col = 'black', diag = FALSE, col = colorRampPalette(c('#0F98B0','#EA5514'))(100))$corrPos
+
+corrplot(cor(pd_full_both %>% filter(condition == 'group') %>% select(c(4:6, 32:35, 31))), method = 'ellipse', type = 'lower', p.mat = p.mat_film, insig = 'blank', addCoef.col = 'black', tl.col = 'black', diag = FALSE, col = colorRampPalette(c('#0F98B0','#EA5514'))(100))$corrPos
+
+```
+
+### composite audience engagament score (ignore)
+
+```{r}
+pd_full_both = pd_full_both %>% mutate(baseline = excitement + distracted + confidentenjoy, AE = social + emo + spiritual + captive)
+```
+
+```{r}
+cor.test(pd_full_both %>% filter(condition == 'group' | condition == 'encore') %>% pull(DET_old), pd_full_both %>% filter(condition == 'group' | condition == 'encore') %>% pull(AE))
+
+cor.test(pd_full_both %>% filter(pgroup != 'alone' & condition != 'journo') %>% pull(DET_old), pd_full_both %>% filter(pgroup != 'alone' & condition != 'journo') %>% pull(baseline))
+
+cor.test(pd_full_both %>% filter(condition == 'group') %>% pull(DET_old), pd_full_both %>% filter(condition == 'group') %>% pull(AE))
+
+cor.test(pd_full_both %>% filter(condition == 'encore') %>% pull(DET_old), pd_full_both %>% filter(condition == 'encore') %>% pull(AE))
+
+ggplot(data = pd_full_both %>% filter%>% filter(pgroup != 'alone' & condition != 'journo'), aes(y = AE, x = DET_old, colour = condition)) + geom_smooth(method = lm, alpha = .1) + geom_point() + theme_ggdist() +scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) +xlab('HR synchrony') + ylab('Self-report')
+
+ggsave('corr.png', width = 2500, height = 1440, units = 'px')
+
+```
+
+### raw HR
+```{r}
+raw_HR_theatre = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience_physiosync/processed/ed.csv')
+raw_HR_film = read.csv('C:/Users/yuech/Desktop/Dreamgirl/audience physio film ver/audience_physiosync/processed/ed.csv')
+```
+
+
+```{r}
+raw_HR_theatre = raw_HR_theatre %>% filter(dv == 'HR', item != 'interval')
+raw_HR_film = raw_HR_film %>% filter(dv == 'HR')
+
+raw_full = rbind(raw_HR_film, raw_HR_theatre) %>% filter(condition != 'alone') %>% mutate(condition = ifelse(category == 'theatre', 'theatre' , condition)) %>% mutate(condition = ifelse(condition == 'group', 'film co-watch' , condition)) %>% mutate(tt = ifelse(item == 'act2', tt + 4278, tt))
+```
+
+```{r}
+ggplot(data = raw_full, aes(x = tt, y = raw, colour = condition, fill = condition)) + geom_smooth(formula = y ~ splines::ns(x, 20)) + jtools::theme_apa() + scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + geom_point(data = raw_full %>% slice(seq(1, n(), by = 100)), alpha = .3, size = .5) +
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + ylab(label = 'Raw HR') + xlab(label = 'Timecourse Window') + ylim(70,120)
+
+timecourse = ggplot(data = rw_cbind_old %>% filter(sgroup == 'in' & pgroup != 'alone'), aes(x = win, y = DET, colour = category, fill = category)) + geom_smooth(formula = y ~ splines::ns(x, 16)) + jtools::theme_apa() + scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + ylab(label = 'HR synchrony') + xlab(label = 'Timecourse Window')
+
+ggsave('raw.png', width = 1920, height = 1440, units = 'px')
+```
+
+```{r}
+lmer(data = raw_full, raw ~ condition + (1|pid)) %>% summary()
+lmer(data = raw_full, raw ~ condition + (1|pid)) %>% summary()
+```
+
+```{r}
+hrv = raw_full %>% group_by(pid, condition) %>% summarise(sd = sd(raw))
+range = raw_full %>% group_by(pid, condition) %>% summarise(max = max(raw), min = min(raw)) %>% ungroup() %>% group_by(condition) %>% summarise(mean_max = mean(max), mean_min = mean(min))
+t.test(data = hrv, sd ~ condition)
+```
+
+
+## Some new plots Feb 2026
+```{r}
+load('.RData')
+```
+
+## in out theatre re plot w/ different colour (figure out a way to keep colour based on group but tweak alpha of sgroups)
+```{r}
+ggplot(data = rw_means_cbind_old %>% filter(condition != 'alone') %>% mutate(sgroup ), aes(x = condition, y = DET_win, colour = condition, fill = condition, alpha = sgroup)) +  
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, position = position_nudge(x = .1)) + 
+  #stat_summary(fun.data = mean_se, geom = "pointrange",          linewidth = 0, position = position_nudge(x = .1)) +
+  geom_boxplot(position = position_dodge(.1), width = .1, notch = TRUE) +
+  #geom_half_point(side= 'l', shape = 124,  range_scale = 0, size = 2.5, width = 1, alpha = .5, position = position_dodge(.15), aes(alpha = sgroup)) +
+  ylab('HR synchrony') + xlab('Condition') +
+  scale_alpha_manual(name = 'pair info', values = c(.75, .5)) + 
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) +
+  geom_signif(y_position = 79, xmin = c(0.8, 1.9), xmax = c(1.2, 2.3),    annotation = c("***", "***"), tip_length = 0, map_signif_level = TRUE, colour = 'black') +
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  coord_flip() + 
+  theme_ggdist() + theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))+
+  guides(alpha = guide_legend(
+      override.aes = list(fill = "grey10")))
+
+ggsave('condition in n out.png', width = 2500, height = 1440, units = 'px')
+```
+# New plots draft V5
+## bar/boxplot for the questionnaires re group size?
+```{r}
+pd_full_both_sr_longer$group_size <- as.factor(pd_full_both_sr_longer$group_size)
+
+ggplot(data = pd_full_both_sr_longer %>% filter(condition == 'film co-watch' & q_from == 'post'), aes(x = item, y = response, colour = group_size, fill = group_size)) + 
+  #geom_smooth(method = lm, alpha = .1) + geom_point() + 
+  geom_boxplot(alpha = .5, width = .5) +
+  theme_ggdist() + 
+  scale_color_startrek(name = "Group Size") + 
+  scale_fill_startrek(name = "Group Size")+
+  scale_x_discrete(name = 'Question Item', labels = c("emo" = "Emotion",
+                                  "captive" = "Captive",
+                                  "spiritual" = "Spiritual",
+                                  'social'= 'Social'))
+
+ggplot(data = pd_full_both_sr_longer %>% filter(condition == 'film co-watch' & q_from == 'post'), aes(x = item, y = response, colour = group_size, fill = group_size)) + 
+  stat_summary(geom = 'bar', fun.y = mean, position = position_dodge(), alpha = .5) + 
+  stat_summary(geom = 'errorbar', fun.data = mean_se, position = position_dodge(.9), width = .5) + 
+  theme_ggdist() +
+  scale_color_startrek(name = "Group Size") + 
+  scale_fill_startrek(name = "Group Size")+
+  scale_x_discrete(name = 'Question Item', labels = c("emo" = "Emotion",
+                                  "captive" = "Captive",
+                                  "spiritual" = "Spiritual",
+                                  'social'= 'Social')) + 
+  ylim(0,5)
+
+ggsave('Questionnaire group sizes.png', width = 2500, height = 1440, units = 'px')
+```
+
+
+```{r}
+# Figure 4A
+plot_4A <- ggplot(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), aes(x = condition, y = DET_win, colour = condition, fill = condition)) + 
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7, position = position_dodge(.3)) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 2,
+               position = position_dodge(width = .3), shape = 18) + 
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1,  whisker.linewidth = 1.25, staplewidth = .25, staple.linewidth = 1) + 
+  ylab('HR synchrony') + xlab('Condition') + 
+  theme_ggdist() +
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  geom_signif(comparisons = list(c('theatre', 'group')), y_position = 79, colour = 'black', map_signif_level = TRUE, tip_length = 0, annotations = '*')  + 
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+plot_4B <- ggplot(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), aes(x = condition, y = DET_win, colour = condition, fill = condition)) + 
+    stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,
+               geom = "crossbar", 
+               width = 0.3,
+               position = position_dodge(width = .3)) +
+    stat_summary(fun.data = mean_se,
+               geom = "errorbar", 
+               width = 0.2,
+               position = position_dodge(width = .3), linewidth = 0.75) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  theme_ggdist() +
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_x_discrete(labels = c("group" = "film co-watch"))
+plot_4B
+
+plot_4_Alt <- ggplot(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), aes(x = condition, y = DET_win, colour = condition, fill = condition)) + 
+   stat_slab(width = .5, position = position_dodge(.3), aes(color_ramp = after_stat(level), fill_ramp = after_stat(level)), .width = c(.05, 1)) +
+  #geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7, position = position_dodge(.3)) +
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1,  whisker.linewidth = 1.25, staplewidth = .25, staple.linewidth = 1) + 
+  ylab('HR synchrony') + xlab('Condition') + 
+  theme_ggdist() +
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC', '#FF5F2E')) + 
+  geom_signif(comparisons = list(c('theatre', 'group')), y_position = 79, colour = 'black', map_signif_level = TRUE, tip_length = 0, annotations = '*')  + 
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none())
+
+plot_4_Alt
+
+plot_4_alt2 <- ggplot(data = rw_means_cbind_old %>% filter(condition == 'theatre'|condition == 'group'), aes(x = condition, y = DET_win, colour = condition, fill = condition)) + 
+  geom_half_violin(side = c('l', 'r'), linewidth = 0,trim = FALSE, alpha = .7) +
+  stat_summary(fun.data = mean_se, 
+  fun.args = list(mult = 1.96), 
+  geom = "linerange", 
+  linewidth = 4, 
+  size = 0, position = position_nudge(x = c(0.1, -0.1))) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 2,
+               position = position_dodge(width = .3), shape = 18) + 
+  stat_interval(alpha = .5, data = ~subset(., condition == 'group'), 
+                aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_nudge(x = 0.1)) + 
+  stat_interval(alpha = .5, data = ~subset(., condition == 'theatre'), 
+                aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_nudge(x = -0.1)) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  theme_ggdist() +
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC', '#FF5F2E')) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  geom_signif(comparisons = list(c('theatre', 'group')), y_position = 79, colour = 'black', map_signif_level = TRUE, tip_length = 0, annotations = '*')  + 
+  scale_x_discrete(labels = c("group" = "film co-watch"), expand = expansion(mult = 1)) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none()) 
+  
+
+plot_4_alt2
+
+ggsave('plot4_alt2.png', width = 2500, height = 1440, units = 'px')
+```
+
+```{r}
+# Figure 6
+plot_5_alt <- ggplot(data = rw_means_cbind_old %>% filter(condition != 'alone') %>% mutate(sgroup ), aes(x = condition, y = DET_win, colour = condition, fill = condition, alpha = sgroup)) +  
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, position = position_nudge(x = .1)) + 
+  #geom_boxplot(position = position_dodge(.1), width = .1, notch = TRUE) +
+  stat_interval(aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.15)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.15)) +
+  #geom_half_point(side= 'l', shape = 124,  range_scale = 0, size = 2.5, width = 1, alpha = .5, position = position_dodge(.15), aes(alpha = sgroup)) +
+  ylab('HR synchrony') + xlab('Condition') +
+  scale_alpha_manual(
+    name = 'pair info', 
+    values = c('in' = .7, 'out' = .4), 
+    labels = c('in' = 'co-present', 'out' = 'pseudo-pair')
+  ) +  
+  scale_fill_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(labels = c('film co-watch', 'theatre'), values = c('#51A3BC','#FF5F2E')) +
+  geom_signif(y_position = 79, xmin = c(0.8, 1.9), xmax = c(1.2, 2.3),    annotation = c("***", "***"), tip_length = 0, map_signif_level = TRUE, colour = 'black') +
+  scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  coord_flip() + 
+  theme_ggdist() + theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))+
+  guides(alpha = guide_legend(
+      override.aes = list(fill = "grey10")), fill_ramp =  guide_none(), color_ramp =  guide_none())
+plot_5_alt
+
+ggsave('plot 6 alt.png', width = 2500, height = 1440, units = 'px')
+```
+### New timecourse plot with HRS and raw HR
+```{r}
+ggplot(data = rw_cbind_old %>% filter(sgroup == 'in' & pgroup != 'alone') %>% mutate(category = recode(category, 'film' = 'film co-watch'), category = relevel(as.factor(category), 'film co-watch')), aes(x = win/20, y = DET, colour = category)) + geom_smooth(se = FALSE, formula = y ~ splines::ns(x, 16)) + 
+  #jtools::theme_apa() +
+  #geom_line(stat = 'summary', aes(y = DET, colour = category), linewidth = 1.2) + 
+  scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC', '#FF5F2E')) + ylab(label = 'HR synchrony') + xlab(label = 'Timecourse Window') +
+  xlab(label = 'Minute') + theme_ggdist() + labs(colour = 'condition') + 
+  #scale_y_continuous(
+    #name = "HR synchrony",
+    #sec.axis = sec_axis(~ ., name = 'Raw HR')) +
+  coord_cartesian(ylim = c(70, 75)) +
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18), legend.position = 'top')
+
+ggsave('timecourse HRS.png', width = 4000, height = 1500, units = 'px')
+
+timecourse
+
+```
+
+
+```{r}
+timecourse_rw <- rw_cbind_old %>% filter(sgroup == 'in' & pgroup != 'alone') %>% mutate(t = win * 3 - 3, minute = t %/%60, halfmin = t %/% 30, two_min = t %/% 120)  
+
+timecourse_summary <- timecourse_rw %>% group_by(pid1, pid2, category, minute) %>% summarise(meanDET = mean(DET, na.rm = TRUE)) %>% ungroup() %>% group_by(pid1, pid2) %>% mutate(norm_meanDET = scale(meanDET))
+```
+```{r}
+ggplot(data = timecourse_summary, aes(x = minute, y = meanDET, colour = category, fill = category)) + #geom_smooth(formula = y ~ splines::ns(x, 16)) + jtools::theme_apa() +
+  geom_line(stat = 'summary', aes(y = meanDET, colour = category), linewidth = 1) + 
+  #geom_line(stat = 'summary', data = raw_tc_summary, aes(y = meanHR), linetype = 2) +
+  scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + ylab(label = 'HR synchrony') + 
+  xlab(label = 'Minute') + theme_ggdist() + 
+  #scale_y_continuous(
+    #name = "HR synchrony",
+    #sec.axis = sec_axis(~ ., name = 'Raw HR')) +
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+  #xlim(0,125)
+
+ggsave('timecourse HRS only.png', width = 4000, height = 1500, units = 'px')
+```
+
+get raw HR
+```{r}
+timecourse_raw <- raw_full %>% select(category, pid, raw, tt) %>% mutate(minute = tt %/%60, halfmin = tt %/% 30)
+
+raw_tc_summary <- timecourse_raw %>% group_by(pid, category, minute) %>% summarise(meanHR = mean(raw, na.rm = TRUE)) %>% ungroup() %>% group_by(pid) %>% mutate(norm_meanHR = scale(meanHR))
+```
+
+```{r}
+ggplot(data = raw_tc_summary, aes(x = minute, y = meanHR, colour = category, fill = category)) + 
+  geom_line(stat = 'summary', data = raw_tc_summary, aes(y = meanHR), alpha = .33, linewidth = 1.25) +
+  geom_line(stat = 'summary', data = timecourse_summary, aes(y = meanDET, colour = category), linewidth = 1) + 
+  scale_fill_manual(values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(values = c('#51A3BC','#FF5F2E')) + ylab(label = 'HR synchrony') + 
+  xlab(label = 'Minute') + theme_ggdist() + 
+  scale_y_continuous(
+    name = "Raw HR",
+    sec.axis = sec_axis(~ ., name = 'HR Synchrony')) +
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))+
+  xlim(0,125)
+
+ggsave('timecourse new.png', width = 4000, height = 1500, units = 'px')
+```
+

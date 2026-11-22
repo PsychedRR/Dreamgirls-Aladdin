@@ -1,0 +1,624 @@
+---
+title: "Vue analysis"
+author: "RR"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(eyethinkphysiosync)
+library(eyethinkdata)
+library(afex)
+library(emmeans)
+library(gghalves)
+library(ggdist)
+library(ggsignif)
+library(psych)
+library(lmerTest)
+```
+
+```{r}
+pd = read.csv('processed data/participant_data_expanded.csv')
+r = read.csv('processed data/rqatable.csv')
+```
+
+
+# I think it is unnecessary to do rw for this one as controls are sort of on a different narrative speed 
+# demogs
+```{r}
+demog <- pd %>% filter(social != 'No show') %>% group_by( condition) %>% summarise(mean_age = mean(age, na.rm = TRUE), sd_age = sd(age, na.rm = TRUE), n = n())
+```
+
+# try get something from r
+```{r}
+r_use = r %>% select(dv, pid1, pid2, sgroup, pgroup, DET, content, type)  %>% filter(type != 'trailer')
+```
+
+```{r}
+r_mean <- r_use %>% filter(!is.na(DET)) %>% group_by(dv, pid1, pid2) %>% summarise(meanDET = mean(DET))
+```
+
+```{r}
+p_info = pd %>% select(pid, condition, social, Date)
+r_mean = left_join(r_mean, p_info, by = c('pid1' = 'pid'))
+r_mean = left_join(r_mean, p_info, by = c('pid2' = 'pid'), suffix = c('_1', '_2'))
+```
+
+```{r}
+r_mean <- r_mean %>% mutate(condition_sgroup = ifelse(condition_1 == condition_2, 'in', 'out'), condition_pgroup = ifelse(condition_sgroup == 'in', condition_1, 'out')) %>% mutate(sgroup = ifelse(condition_pgroup == 'movie' & Date_1 != Date_2, 'out', 'in')) %>% mutate(pgroup = ifelse(condition_pgroup == 'movie'&Date_1 != Date_2, 'out', condition_pgroup))  %>% mutate(social_sgroup = ifelse(social_1 == social_2, 'in' , 'out'), social_pgroup = ifelse(social_1 == social_2, social_1 , 'out')) %>% mutate(social_sgroup = ifelse(social_pgroup == 'Individual', social_pgroup, social_sgroup))
+
+r_mean <- r_mean %>% mutate(pgroup = ifelse(Date_1 == Date_2, condition_pgroup, 'out')) %>% rename('condition' = 'condition_pgroup')
+r_mean <- r_mean %>% mutate(sgroup = ifelse(Date_1 == Date_2, 'in', 'out'))
+```
+
+
+```{r}
+lm(data = r_use %>% filter(sgroup == 'in' & dv == 'HR'), DET ~ type) %>% summary()
+
+membership_mx = lmerMultiMember::weights_from_columns(subset(r_mean, dv == 'HR')[,c('pid1','pid2')])
+
+contrasts(r_mean$condition)
+
+r_mean$condition <- as.factor(r_mean$condition)
+contrasts(r_mean$condition) <- c(-1,1)
+
+mod_mm_1  <- lmerMultiMember::lmer(data = subset(r_mean, dv == 'HR'), meanDET ~ condition + (1|pair), memberships = list(pair = membership_mx)) 
+mod_mm_1 %>%  summary(ddf = 'Kenward-Roger')
+emmeans(mod_mm_1, specs = 'condition_pgroup')
+
+ggplot(data = subset(r_mean, dv == 'HR' & sgroup != 'out'), aes(x = pgroup, y = meanDET, colour = pgroup, fill = pgroup)) + 
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .7) +
+  stat_summary(fun = mean, geom = "point", size = 2.5, shape = 18, position = position_dodge(.5)) +
+  #stat_summary(aes(group = 1), fun = mean, geom = "line",linewidth = 1, color = "black", linetype = 1, alpha = .1) +
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1, notch = TRUE, whisker.linewidth = 1.25, staplewidth = .25, staple.linewidth = 1) + 
+  #geom_half_point(side= 'l', shape = 124,  range_scale = 0,   size = 3.5,   width = 1,   alpha = .5) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  coord_flip() + 
+  theme_ggdist() +
+  scale_fill_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  geom_signif(comparisons = list(c('book', 'movie')), y_position = 97, colour = 'black', map_signif_level = TRUE, tip_length = 0)  + 
+  #scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) 
+
+
+ggsave('aladdin main DET.png', width = 1920, height = 1440, units = 'px')
+
+```
+
+```{r}
+in_n_out_mx = lmerMultiMember::weights_from_columns(subset(r_mean, dv == 'HR')[,c('pid1','pid2')])
+
+lm(data = subset(r_mean, dv == 'HR' & condition == 'book'), meanDET ~ sgroup) %>% emmeans(specs = 'sgroup')
+
+mod_mm_2  <- lmerMultiMember::lmer(data = subset(r_mean, dv == 'HR'), meanDET ~ condition*sgroup + (1|pair), memberships = list(pair = in_n_out_mx)) 
+
+mod_mm_2 %>% summary(ddf = 'Kenward-Roger')
+
+emmeans::emmeans(mod_mm_2, pairwise, ~c(condition, sgroup))
+
+ggplot(data = r_mean %>% filter(dv == 'HR'), aes(x = condition, y = meanDET, colour = condition, fill = condition, alpha = sgroup)) +  
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, position = position_nudge(x = .1)) + #stat_summary(fun.data = mean_se, geom = "pointrange", linewidth = 0,position = position_nudge(x = .1)) +
+  geom_boxplot(position = position_dodge(.1), width = .1, notch = TRUE) + 
+  stat_summary(fun = mean, geom = "point", size = 2.5, shape = 18, position = position_nudge(x = .1)) +
+  #geom_half_point(side= 'l', shape = 124,range_scale = 0, size = 2.5, width = 1,alpha = .5, position = position_dodge(.15)) +
+  scale_alpha_manual(name = 'pair info', values = c(.75, .35)) + 
+  ylab('HR synchrony') + xlab('Condition') + 
+  scale_fill_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) +
+  geom_signif(y_position = 98, xmin = c(0.8, 1.9), xmax = c(1.2, 2.3),annotation = c("NS.", "NS."), tip_length = 0, map_signif_level = TRUE, colour = 'black', ) +
+  #scale_x_discrete(labels = c("group" = "film co-watch")) + 
+  guides(alpha = guide_legend(
+      override.aes = list(fill = "grey10")))+ 
+  coord_flip() + 
+  theme_ggdist() + theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+
+
+ggsave('aladdin in n out DET.png', width = 2500, height = 1440, units = 'px')
+```
+
+```{r}
+ggplot(data = subset(r_mean, dv == 'HR' & pgroup != 'book'), aes(x = sgroup, y = meanDET, colour = sgroup, fill = sgroup)) + 
+  geom_half_violin(side = 'r', linewidth = 0,trim = FALSE, alpha = .5, width = .75, position = position_dodge(.3)) +
+  #stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,
+               #geom = "crossbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),
+  #) +
+  #stat_summary(fun.data = mean_se,
+               #geom = "errorbar", 
+               #width = 0.3,
+               #position = position_dodge(width = .3),linewidth = 0.75
+  #) +
+  stat_summary(fun.data = mean_se,
+               geom = "pointrange", 
+               linewidth = 2,
+               position = position_dodge(width = .3)) + 
+  geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1) + 
+  geom_half_point(side= 'l', shape = 124,
+    range_scale = 0,
+   size = 3.5,
+   width = 1,
+   alpha = .5) +
+  ylab('HR synchrony') + xlab('pair info') + 
+  coord_flip() + 
+  theme_ggdist() +
+  scale_fill_manual(name = 'pair info', labels = c('in' = 'co-present', 'out' = 'pseudo pair'), values = c('#51A3BC','#FF5F2E')) + 
+  scale_color_manual(name = 'pair info', labels = c('in' = 'co-present', 'out' = 'pseudo pair'), values = c('#51A3BC','#FF5F2E')) + 
+  geom_signif(comparisons = list(c('in', 'out')), y_position = 97, colour = 'black', map_signif_level = TRUE, tip_length = 0)  + 
+  scale_x_discrete( labels = c('in' = 'co-\npresent', 'out' = 'pseudo\n pair')) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18))
+```
+
+
+```{r}
+social_mx = lmerMultiMember::weights_from_columns(subset(r_mean, dv == 'HR' & pgroup == 'movie')[,c('pid1','pid2')])
+
+mod_mm_3  <- lmerMultiMember::lmer(data = subset(r_mean, dv == 'HR' & pgroup == 'movie'), meanDET ~ social_sgroup + (1|pair), memberships = list(pair = social_mx)) 
+
+mod_mm_3 %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+```
+
+## Self reports
+```{r}
+pd <-  pd %>% mutate(
+    pre_mean  = rowMeans(across(starts_with("pre_")), na.rm = TRUE),
+    post_mean = rowMeans(across(starts_with("post_")), na.rm = TRUE),
+    pe_mean = rowMeans(across(starts_with("pe_")), na.rm = TRUE),
+    eng_mean = rowMeans(across(starts_with("eng_")), na.rm = TRUE)
+  )
+
+```
+
+```{r}
+lm(data = pd, eng_mean ~ condition) %>% summary()
+lm(data = pd, pre_mean ~ condition) %>% summary()
+lm(data = pd, post_mean ~ condition) %>% summary()
+lm(data = pd, pe_mean ~ condition) %>% summary()
+```
+
+### add together?
+```{r}
+crqa_means()
+```
+
+### Run some FA or PCA?
+```{r}
+#37:84, 86:93
+
+pca_scale <- pd[, c(57:84, 86:93)] %>% na.omit()
+
+pca_scale_scaled <- scale(pca_scale)
+pca_result <- prcomp(pca_scale_scaled, center = TRUE, scale. = TRUE)
+
+plot(pca_result, type = "l")
+
+pca_result
+# Summary: variance explained
+summary(pca_result)
+
+biplot(pca_result)
+
+head(pca_result$rotation[, 1:3])
+
+sort(abs(pca_result$rotation[, 1]), decreasing = TRUE)
+
+scores <- pca_result$x
+head(scores)
+
+
+scores_df <- as.data.frame(scores)
+
+combined <- cbind(pd[rownames(scores_df), ], scores_df)
+
+ggplot(combined, aes(x = PC1, y = PC2, colour = condition)) +
+  geom_point(alpha = 0.6) +
+  #scale_shape_manual(values =  c(0,1,2,3,4,5,6,15,16,17)) +
+  theme_minimal() +
+  labs(title = "PCA: Participants in Component Space")
+
+
+```
+
+```{r}
+pca_scale %>% scree(pc=F) # 3?
+
+factanal(pca_scale, factors = 3, scores='regression', rotation = 'promax') 
+```
+
+```{r}
+t.test(data = pd, pe_captive ~ condition)
+t.test(data = pd, pe_spirit ~ condition)
+t.test(data = pd, pe_social ~ condition)
+t.test(data = pd, pe_emotion ~ condition)
+t.test(data = pd, eng_attention ~ condition)
+t.test(data = pd, eng_character ~ condition)
+t.test(data = pd, eng_narrative ~ condition)
+t.test(data = pd, eng_presence ~ condition)
+t.test(data = pd, eng_engagement ~ condition)
+t.test(data = pd, social_connect ~ condition)
+t.test(data = pd, social_like ~ condition)
+t.test(data = pd, social_ios ~ condition)
+```
+
+```{r}
+pd <- pd %>% mutate(Pre_BMIS = (pre_BMIS_pu + pre_BMIS_ac + pre_BMIS_pt + pre_BMIS_nr)/4, Post_BMIS = (post_BMIS_pu + post_BMIS_ac + post_BMIS_pt + post_BMIS_nr)/4, PE_BnN = (pe_captive + pe_emotion + pe_social + pe_spirit)/4, Social_Scale = (social_connect + social_like + social_ios)/3)
+```
+
+### getting a group size col
+```{r}
+pd_day <- pd %>%
+  group_by(Date) %>%
+  mutate(n_participants = n_distinct(pid)) %>%
+  ungroup() %>% select(group_size = n_participants, pid)
+
+```
+
+
+
+```{r}
+t.test(data = pd, Pre_BMIS ~ condition)
+t.test(data = pd, Post_BMIS ~ condition)
+t.test(data = pd, PE_BnN ~ condition)
+t.test(data = pd, eng_engagement ~ condition)
+t.test(data = pd, Social_Scale ~ condition)
+```
+
+```{r}
+pd_smaller <- pd %>% select(pid, Pre_BMIS, Post_BMIS, PE_BnN, eng_engagement, Social_Scale, social_connect, social_ios, social_like, pre_BMIS_pu, pre_BMIS_ac, pre_BMIS_pt, pre_BMIS_nr, post_BMIS_pu, post_BMIS_ac,  post_BMIS_pt, post_BMIS_nr, eng_attention, eng_character, eng_character, eng_narrative, eng_presence, pe_captive, pe_emotion, pe_social, pe_spirit)
+
+DET_means <- crqa_means(r_mean %>% filter(dv != 'EDA'& pgroup != 'out') %>% setDT(), rqa_vars = 'meanDET',  average_over = c('pid1', 'pgroup'))
+
+DET_means_diff_screen_incl <- crqa_means(r_mean %>% filter(dv != 'EDA'& pgroup != 'out') %>% setDT(), rqa_vars = 'meanDET',  average_over = c('pid1'))
+
+DET_means_r <- crqa_means(r %>% filter(dv == 'HR' & type != 'trailer') %>% setDT(), rqa_vars = 'DET',  average_over = c('pid1', 'type', 'sgroup'))
+
+DET_means_r_diff_screen_incl <- crqa_means(r %>% filter(dv == 'HR' & type != 'trailer') %>% setDT(), rqa_vars = 'DET',  average_over = c('pid1', 'type'))
+
+pd_smaller <- left_join(pd_smaller, DET_means, by = c('pid' = 'pid'))
+pd_smaller <- left_join(pd_smaller, DET_means_r %>% filter(sgroup == 'in'), by = c('pid' = 'pid'))
+
+pd_smaller <- left_join(pd_smaller, pd_day)
+
+pd_select <- pd %>% select(pid, Pre_BMIS, Post_BMIS, PE_BnN, eng_engagement, Social_Scale, social_connect, social_ios, social_like, pre_BMIS_pu, pre_BMIS_ac, pre_BMIS_pt, pre_BMIS_nr, post_BMIS_pu, post_BMIS_ac,  post_BMIS_pt, post_BMIS_nr, eng_attention, eng_character, eng_character, eng_narrative, eng_presence, pe_captive, pe_emotion, pe_social, pe_spirit)
+
+pd_select <- left_join(pd_select, DET_means_diff_screen_incl, by = c('pid' = 'pid'))
+pd_select <- left_join(pd_select, DET_means_r_diff_screen_incl, by = c('pid' = 'pid'))
+
+pd_select <- left_join(pd_select, pd_day)
+
+```
+
+
+```{r}
+lm(data = pd_smaller %>% filter(type == 'movie'), eng_engagement ~ group_size) %>% summary()
+lm(data = pd_smaller%>% filter(type == 'movie'), PE_BnN ~ group_size) %>% summary()
+lm(data = pd_smaller%>% filter(type == 'movie'), Social_Scale ~ group_size) %>% summary()
+lm(data = pd_smaller%>% filter(type == 'movie'), Post_BMIS ~ group_size) %>% summary()
+
+r_mean <- left_join(r_mean, pd_day, by = c('pid1' = 'pid'))
+
+r_mean_in <- r_mean %>% filter(sgroup == 'in')
+
+size_mx = lmerMultiMember::weights_from_columns(subset(r_mean_in, dv == 'HR' & condition == 'movie')[,c('pid1','pid2')])
+
+mod_mm_4  <- lmerMultiMember::lmer(data = subset(r_mean_in, dv == 'HR'& condition == 'movie'), meanDET ~ as.factor(group_size) + (1|pair), memberships = list(pair = size_mx)) 
+
+mod_mm_4 %>% lmerModLmerTestMultiMember %>% summary(ddf = 'Kenward-Roger')
+
+emmeans(mod_mm_4, specs = 'group_size')
+
+```
+
+
+```{r}
+GGally::ggpairs(pd_smaller %>% select(-pid) %>% filter(pgroup == 'movie'))
+```
+
+```{r}
+write.csv(r_mean, 'r_mean.csv')
+write.csv(pd_smaller %>% filter(sgroup != 'out'), 'pd_narrower.csv')
+```
+
+```{r}
+
+```
+
+```{r}
+corr_result <- lapply(names(pd_smaller)[2:25], function(col) {
+  test <- cor.test(pd_smaller[[col]], pd_smaller$meanDET, use = "pairwise.complete.obs")
+  data.frame(
+    Variable = col,
+    Correlation = test$estimate,
+    p_value = test$p.value,
+    CI_lower = test$conf.int[1],
+    CI_upper = test$conf.int[2]
+  )
+})
+
+cor_summary <- do.call(rbind, corr_result)
+```
+
+```{r}
+split_data <- split(pd_smaller, pd_smaller$type)
+
+# Loop over each type group and run your correlation logic
+cor_by_type <- lapply(names(split_data), function(type_name) {
+  df_group <- split_data[[type_name]]
+  
+  corr_result <- lapply(names(df_group)[2:25], function(col) {
+    test <- cor.test(df_group[[col]], df_group$DET, use = "pairwise.complete.obs")
+    data.frame(
+      type = type_name,
+      Variable = col,
+      Correlation = test$estimate,
+      p_value = test$p.value,
+      CI_lower = test$conf.int[1],
+      CI_upper = test$conf.int[2]
+    )
+  })
+  
+  do.call(rbind, corr_result)
+})
+
+# Combine all results into one dataframe
+cor_summary_by_type <- do.call(rbind, cor_by_type)
+
+
+```
+
+## run a pca again
+```{r}
+pd_pca_scaled <- pd_smaller %>% select(social_connect, social_ios, social_like, post_BMIS_pu, post_BMIS_ac,  post_BMIS_pt, post_BMIS_nr, eng_attention, eng_character, eng_character, eng_narrative, eng_presence, pe_captive, pe_emotion, pe_social, pe_spirit) %>% na.omit() %>% scale()
+
+pd_pca_totalscores <- pd_smaller %>% select(Pre_BMIS, Post_BMIS, PE_BnN, eng_engagement, Social_Scale, meanDET) %>% na.omit() %>% scale()
+
+
+
+library(FactoMineR)
+library(factoextra)
+
+
+pca_res <- PCA(pd_pca_scaled, graph = TRUE)
+
+fviz_eig(pca_res)  # scree plot
+fviz_pca_biplot(pca_res, repel = TRUE)
+
+
+```
+
+
+```{r}
+raw_items <-  pd[,c(37:52, 61:84)] %>% na.omit() %>% scale()
+pca_raw <- PCA(raw_items, graph = TRUE)
+
+scores <- pca_raw$ind$coord %>% as.data.frame()
+
+pd_pca <- pd %>% filter(!is.na(pe_captive)) %>% select(pid, condition) %>% bind_cols(scores) 
+
+pd_pca <- left_join(pd_pca, pd_smaller %>% select(pid, meanDET))
+lm(data = pd_pca, Dim.1 ~ condition) %>% summary()
+lm(data = pd_pca, Dim.2 ~ condition) %>% summary()
+```
+
+
+
+
+
+## FA
+```{r}
+pd_smaller %>% select(social_connect, social_ios, social_like, post_BMIS_pu, post_BMIS_ac,  post_BMIS_pt, post_BMIS_nr, eng_attention, eng_character, eng_character, eng_narrative, eng_presence, meanDET, pe_captive, pe_emotion, pe_social, pe_spirit) %>% na.omit() %>% scree(pc=F) #2
+
+factanal(pd_smaller %>% select(social_connect, social_ios, social_like, post_BMIS_pu, post_BMIS_ac,  post_BMIS_pt, post_BMIS_nr, eng_attention, eng_character, eng_character, eng_narrative, eng_presence, meanDET, pe_captive, pe_emotion, pe_social, pe_spirit) %>% na.omit(), factors = 2, scores='regression', rotation = 'promax') -> FA_mod1
+
+
+loadings(FA_mod1)
+loadings = as.tibble(FA_mod1$loadings[,]) 
+
+loadings$x
+```
+## new plots 
+```{r}
+pd_longer <- pivot_longer(pd_smaller%>%select(pid, Pre_BMIS, Post_BMIS, PE_BnN, eng_engagement, Social_Scale, type), cols = c('Pre_BMIS', 'Post_BMIS', 'PE_BnN', 'eng_engagement', 'Social_Scale'), names_to = 'item', values_to = 'response')
+```
+
+```{r}
+p1 = ggplot(data = pd_longer %>% filter(!is.na(response) & !is.na(type) & (item == 'Pre_BMIS' | item == 'Post_BMIS')) %>% mutate(item = relevel(as.factor(item), 'Pre_BMIS')), aes(x = item, y = response, colour = type, fill = type)) + 
+  geom_half_violin(side = 'l', linewidth = 0,trim = TRUE, alpha = .7, position = position_nudge(x = -.1)) + stat_summary(fun.data = mean_se,
+               geom = "point", 
+               linewidth = 0,
+               position = position_nudge(x = -.1), shape = 18) +
+  stat_interval(alpha = .5, aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.1)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.1)) +
+  #geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1, notch = TRUE) + 
+  #geom_half_point(side= 'r', shape = 95,range_scale = 0, size = 5, width = 1, alpha = .5, position = position_dodge(.075)) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  ylab('Score') + xlab('Scale') + 
+  scale_fill_manual(name = 'condition', label = c('book', 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', label = c('book', 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  geom_signif(y_position = 21, xmin = c(0.8, 1.8), xmax = c(1.1, 2.1),
+    annotation = c('***', "***"), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') + 
+  theme_ggdist() + 
+  theme(legend.position = 'top', text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none()) #+
+
+
+p1
+
+p2 = ggplot(data = pd_longer %>% filter(!is.na(response) & !is.na(type) & (item == 'Social_Scale')), aes(x = item, y = response, colour = type, fill = type)) + 
+  geom_half_violin(side = 'l', linewidth = 0,trim = TRUE, alpha = .7, position = position_nudge(x = -.05)) + stat_summary(fun.data = mean_se,
+               geom = "point", 
+               linewidth = 0,
+               position = position_nudge(x = -.05)) +
+  stat_interval(alpha = .5, aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.05)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.05)) +
+  #geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1, notch = TRUE) + 
+  #geom_half_point(side= 'r', shape = 95,range_scale = 0, size = 5, width = 1, alpha = .5, position = position_dodge(.075)) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  ylab('Score') + xlab('Scale') + ylim(1,7.5) + 
+  scale_fill_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_x_discrete(labels = c('PE_BnN' = 'IIIS')) +
+  geom_signif(y_position = 7.5, xmin = c(0.8), xmax = c(1.1),
+    annotation = c('***'), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') + 
+  theme_ggdist() + 
+  theme(legend.position = 'top', text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none())
+
+p2
+
+p3 = ggplot(data = pd_longer %>% filter(!is.na(response) & !is.na(type) & (item == 'eng_engagement')), aes(x = item, y = response, colour = type, fill = type)) + 
+  geom_half_violin(side = 'l', linewidth = 0,trim = TRUE, alpha = .7, position = position_nudge(x = -.05)) + stat_summary(fun.data = mean_se,
+               geom = "point", 
+               linewidth = 0,
+               position = position_nudge(x = -.05)) +
+  stat_interval(alpha = .5, aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.05)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.05)) +
+  #geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1, notch = TRUE) + 
+  #geom_half_point(side= 'r', shape = 95,range_scale = 0, size = 5, width = 1, alpha = .5, position = position_dodge(.075)) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  ylab('Score') + xlab('Scale') + 
+  scale_fill_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_x_discrete(labels = c('eng_engagement' = 'NE')) +
+  geom_signif(y_position = 18, xmin = c(0.8), xmax = c(1.1),
+    annotation = c('***'), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') + 
+  theme_ggdist() + 
+  theme(legend.position = 'top', text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none())
+
+p3
+
+p4 <- ggplot(data = pd_longer %>% filter(!is.na(response) & !is.na(type) & (item == 'PE_BnN')), aes(x = item, y = response, colour = type, fill = type)) + 
+  geom_half_violin(side = 'l', linewidth = 0,trim = FALSE, alpha = .7, position = position_nudge(x = -.05)) + stat_summary(fun.data = mean_se,
+               geom = "point", 
+               linewidth = 0,
+               position = position_nudge(x = -.05)) +
+  stat_interval(alpha = .5, aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.05)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.05)) +
+  #geom_boxplot(position = position_dodge(.1), alpha = .1, width = .1, notch = TRUE) + 
+  #geom_half_point(side= 'r', shape = 95,range_scale = 0, size = 5, width = 1, alpha = .5, position = position_dodge(.075)) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  ylab('Score') + xlab('Scale') + ylim(0,7) + 
+  scale_fill_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_x_discrete(labels = c('PE_BnN' = 'IIIS')) +
+  geom_signif(y_position = 7, xmin = c(0.8), xmax = c(1.1),
+    annotation = c('***'), tip_length = 0 ,
+            map_signif_level = TRUE, colour = 'black') + 
+  theme_ggdist() + 
+  theme(legend.position = 'top', text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none())
+
+p4
+
+ggsave('p1.png', p1,width = 2000, height = 2000, units = 'px')
+ggsave('p2.png', p2,width = 2000, height = 2000, units = 'px')
+ggsave('p3.png', p3,width = 2000, height = 2000, units = 'px')
+ggsave('p4.png', p4,width = 2000, height = 2000, units = 'px')
+
+```
+```{r}
+pd_long <- read.csv('pd_narrower.csv')
+```
+
+```{r}
+cor.test( ~ social_connect + meanDET, data = pd_long %>% filter(type == 'movie'))
+cor.test( ~ social_connect + DET, data = pd_long  %>% filter(type == 'movie'))
+cor.test( ~ social_like + meanDET, data = pd_long)
+cor.test( ~ social_like + DET, data = pd_long)
+cor.test( ~ social_ios + meanDET, data = pd_long %>% filter(type == 'book'))
+cor.test( ~ social_ios + DET, data = pd_long %>% filter(type == 'book'))
+
+cor.test(~ social_ios + DET, data = pd_select, method = 'spearman')
+
+cor_result <- psych::corr.test(pd_select[, 2:26], pd_select[, 28])
+View(cor_result$r)
+```
+
+## Exploring diff with original analyses
+```{r}
+pd_dcr <- read.csv('processed data/pd_dcr.csv')
+```
+
+```{r}
+sig_cor <- pd_select %>% select(pid, type, social_ios, eng_narrative, pe_captive, pe_emotion, DET)
+```
+
+```{r}
+
+```
+
+## New plots V5
+```{r}
+# figure 7
+plot_7_alt <- ggplot(data = subset(r_mean, dv == 'HR' & sgroup != 'out'), aes(x = pgroup, y = meanDET, colour = pgroup, fill = pgroup)) + 
+  geom_half_violin(side = c('l', 'r'), linewidth = 0,trim = FALSE, alpha = .7) +
+  stat_summary(fun = mean, geom = "point", size = 2.5, shape = 18) +
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange", 
+  linewidth = 4, size = 0, position = position_nudge(x = c(0.1, -0.1))) + 
+  stat_interval(alpha = .5, data = ~subset(., condition == 'book'), 
+                aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_nudge(x = 0.1)) + 
+  stat_interval(alpha = .5, data = ~subset(., condition == 'movie'), 
+                aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_nudge(x = -0.1)) +
+  #stat_summary(aes(group = 1), fun = mean, geom = "line",linewidth = 1, color = "black", linetype = 1, alpha = .1) +
+  #geom_boxplot(position = position_nudge(x = -.125), alpha = .1, width = .1, notch = TRUE, whisker.linewidth = 1.25, staplewidth = .25, staple.linewidth = 1) + 
+  #geom_half_point(side= 'l', shape = 124,  range_scale = 0,   size = 3.5,   width = 1,   alpha = .5) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  theme_ggdist() +
+  scale_fill_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  geom_signif(comparisons = list(c('book', 'movie')), y_position = 97, colour = 'black', map_signif_level = TRUE, tip_length = 0)  + 
+  scale_x_discrete(expand = expansion(mult = 1), labels = c('movie' = 'film')) + 
+  theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) + guides(fill_ramp =  guide_none(), color_ramp =  guide_none()) 
+
+
+plot_7_alt
+ggsave('plot7_alt.png', plot = plot_7_alt, width = 2500, height = 1440, units = 'px')
+
+```
+
+```{r}
+# plot 8 alt
+ggplot(data = r_mean %>% filter(dv == 'HR'), aes(x = condition, y = meanDET, colour = condition, fill = condition, alpha = sgroup)) +  
+  geom_half_violin(data = ~subset(., sgroup == 'in'), side = 'r', linewidth = 0,trim = FALSE, position = position_nudge(x = .1)) + 
+  geom_half_violin(data = ~subset(., sgroup == 'out'), side = 'r', linewidth = 0,trim = FALSE, position = position_nudge(x = .1), colour = 'black') + 
+  stat_interval(aes(color_ramp = after_stat(level)), 
+                .width = c(.5, .95), 
+                position = position_dodge(0.15)) + 
+  stat_summary(fun.data = mean_se, fun.args = list(mult = 1.96), geom = "linerange",   linewidth = 4, position = position_dodge(.15)) +
+   scale_alpha_manual(
+    name = 'pair type', 
+    values = c('in' = .8, 'out' = .45), 
+    labels = c('in' = 'co-present', 'out' = 'pseudo-pair')
+  ) +  
+  stat_summary(fun.data = mean_se, data = ~subset(., sgroup == 'in'), geom = 'point', position = position_nudge(x = .1)) +
+  stat_summary(fun.data = mean_se, data = ~subset(., sgroup == 'out'), geom = 'point', shape = 18, position = position_nudge(x = .1)) +
+  scale_color_ramp_discrete(range = c(0.4, 1)) +
+  ylab('HR synchrony') + xlab('Condition') + 
+  scale_fill_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) + 
+  scale_color_manual(name = 'condition', labels = c('movie' = 'film'), values = cols4all::c4a('wes.darjeeling2',2)) +
+  geom_signif(y_position = 98, xmin = c(0.8, 1.9), xmax = c(1.2, 2.3),annotation = c("NS.", "NS."), tip_length = 0, map_signif_level = TRUE, colour = 'black', ) +
+  guides(alpha = guide_legend(
+      override.aes = list(fill = "grey10")), fill_ramp =  guide_none(), color_ramp =  guide_none())+ 
+  coord_flip() + 
+  theme_ggdist() + theme(text = element_text(size = 18), axis.text = element_text(size = 18), legend.text = element_text(size = 18), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), strip.text.x = element_text(size = 18)) +
+  scale_x_discrete(labels = c('movie' = 'film'))
+
+ggsave('plot 8 alt.png', width = 2500, height = 1440, units = 'px')
+```
+

@@ -1,0 +1,512 @@
+pid,day,Date,condition,social,eid,date,type,content,starttime,stoptime
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,movie,act1,37:00.0,07:00.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,movie,act2,07:00.0,37:00.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,movie,act3,37:00.0,07:00.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,movie,act4,07:00.0,37:00.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p01,Monday,03-Jun,movie,Individual,A00062,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,movie,act1,37:00.0,07:00.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,movie,act2,07:00.0,37:00.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,movie,act3,37:00.0,07:00.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,movie,act4,07:00.0,37:00.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p02,Monday,03-Jun,movie,Individual,A00044,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,movie,act1,37:00.0,07:00.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,movie,act2,07:00.0,37:00.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,movie,act3,37:00.0,07:00.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,movie,act4,07:00.0,37:00.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p03,Monday,03-Jun,movie,Individual,A001F0,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,movie,act1,37:00.0,07:00.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,movie,act2,07:00.0,37:00.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,movie,act3,37:00.0,07:00.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,movie,act4,07:00.0,37:00.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p04,Monday,03-Jun,movie,Individual,A001D6,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,movie,act1,37:00.0,07:00.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,movie,act2,07:00.0,37:00.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,movie,act3,37:00.0,07:00.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,movie,act4,07:00.0,37:00.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p05,Monday,03-Jun,movie,Individual,A0010B,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,movie,act1,37:00.0,07:00.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,movie,act2,07:00.0,37:00.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,movie,act3,37:00.0,07:00.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,movie,act4,07:00.0,37:00.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p06,Monday,03-Jun,movie,Individual,A003FE,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,movie,act1,37:00.0,07:00.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,movie,act2,07:00.0,37:00.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,movie,act3,37:00.0,07:00.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,movie,act4,07:00.0,37:00.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p07,Monday,03-Jun,movie,Group-1,A0009E,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,movie,act1,37:00.0,07:00.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,movie,act2,07:00.0,37:00.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,movie,act3,37:00.0,07:00.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,movie,act4,07:00.0,37:00.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p08,Monday,03-Jun,movie,Group-1,A00132,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,movie,act1,37:00.0,07:00.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,movie,act2,07:00.0,37:00.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,movie,act3,37:00.0,07:00.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,movie,act4,07:00.0,37:00.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p09,Monday,03-Jun,movie,Group-1,A001A6,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,movie,act1,37:00.0,07:00.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,movie,act2,07:00.0,37:00.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,movie,act3,37:00.0,07:00.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,movie,act4,07:00.0,37:00.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p10,Monday,03-Jun,movie,Group-2,A001CF,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,movie,act1,37:00.0,07:00.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,movie,act2,07:00.0,37:00.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,movie,act3,37:00.0,07:00.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,movie,act4,07:00.0,37:00.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,trailer,Farmegeddon,33:15.0,34:14.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,trailer,Lego Playmobil,32:11.0,33:15.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,trailer,Men in Black,25:44.0,27:17.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,trailer,Toy Story 4,27:17.0,28:30.0
+p11,Monday,03-Jun,movie,Group-2,A0000D,03-Jun,trailer,XMen Dark Phoenix,24:18.0,25:44.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,movie,act1,32:22.0,02:22.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,movie,act2,02:22.0,32:22.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,movie,act3,32:22.0,02:22.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,movie,act4,02:22.0,32:22.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p12,Tuesday,04-Jun,movie,Group-A,A0009E,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,movie,act1,32:22.0,02:22.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,movie,act2,02:22.0,32:22.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,movie,act3,32:22.0,02:22.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,movie,act4,02:22.0,32:22.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p13,Tuesday,04-Jun,movie,Group-A,A0005A,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,movie,act1,32:22.0,02:22.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,movie,act2,02:22.0,32:22.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,movie,act3,32:22.0,02:22.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,movie,act4,02:22.0,32:22.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p14,Tuesday,04-Jun,movie,Group-B,A0000D,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,movie,act1,32:22.0,02:22.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,movie,act2,02:22.0,32:22.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,movie,act3,32:22.0,02:22.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,movie,act4,02:22.0,32:22.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p15,Tuesday,04-Jun,movie,Group-B,A00062,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,movie,act1,32:22.0,02:22.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,movie,act2,02:22.0,32:22.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,movie,act3,32:22.0,02:22.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,movie,act4,02:22.0,32:22.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p16,Tuesday,04-Jun,movie,Group-C,A001F0,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,movie,act1,32:22.0,02:22.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,movie,act2,02:22.0,32:22.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,movie,act3,32:22.0,02:22.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,movie,act4,02:22.0,32:22.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p17,Tuesday,04-Jun,movie,Group-C,A001D6,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,movie,act1,32:22.0,02:22.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,movie,act2,02:22.0,32:22.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,movie,act3,32:22.0,02:22.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,movie,act4,02:22.0,32:22.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p18,Tuesday,04-Jun,movie,Group-C,A00044,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,movie,act1,32:22.0,02:22.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,movie,act2,02:22.0,32:22.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,movie,act3,32:22.0,02:22.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,movie,act4,02:22.0,32:22.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p19,Tuesday,04-Jun,movie,Individual,A00132,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,movie,act1,32:22.0,02:22.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,movie,act2,02:22.0,32:22.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,movie,act3,32:22.0,02:22.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,movie,act4,02:22.0,32:22.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p20,Tuesday,04-Jun,movie,Individual,A001CF,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,movie,act1,32:22.0,02:22.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,movie,act2,02:22.0,32:22.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,movie,act3,32:22.0,02:22.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,movie,act4,02:22.0,32:22.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p21,Tuesday,04-Jun,movie,Individual,A003FE,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,movie,act1,32:22.0,02:22.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,movie,act2,02:22.0,32:22.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,movie,act3,32:22.0,02:22.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,movie,act4,02:22.0,32:22.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,trailer,Farmegeddon,27:02.0,28:03.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,trailer,Lego Playmobil,25:21.0,27:02.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,trailer,Men in Black,20:35.0,22:06.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,trailer,Toy Story 4,22:06.0,23:41.0
+p22,Tuesday,04-Jun,movie,Individual,A001A6,04-Jun,trailer,XMen Dark Phoenix,19:08.0,20:35.0
+p23,Wednesday,05-Jun,movie,No show,,05-Jun,movie,act1,35:18.0,05:18.0
+p23,Wednesday,05-Jun,movie,No show,,05-Jun,movie,act2,05:18.0,35:18.0
+p23,Wednesday,05-Jun,movie,No show,,05-Jun,movie,act3,35:18.0,05:18.0
+p23,Wednesday,05-Jun,movie,No show,,05-Jun,movie,act4,05:18.0,35:18.0
+p24,Wednesday,05-Jun,movie,Group-D,A00132,05-Jun,movie,act1,35:18.0,05:18.0
+p24,Wednesday,05-Jun,movie,Group-D,A00132,05-Jun,movie,act2,05:18.0,35:18.0
+p24,Wednesday,05-Jun,movie,Group-D,A00132,05-Jun,movie,act3,35:18.0,05:18.0
+p24,Wednesday,05-Jun,movie,Group-D,A00132,05-Jun,movie,act4,05:18.0,35:18.0
+p25,Wednesday,05-Jun,movie,Group-D,A00213,05-Jun,movie,act1,35:18.0,05:18.0
+p25,Wednesday,05-Jun,movie,Group-D,A00213,05-Jun,movie,act2,05:18.0,35:18.0
+p25,Wednesday,05-Jun,movie,Group-D,A00213,05-Jun,movie,act3,35:18.0,05:18.0
+p25,Wednesday,05-Jun,movie,Group-D,A00213,05-Jun,movie,act4,05:18.0,35:18.0
+p26,Wednesday,05-Jun,movie,Group-D,A00019,05-Jun,movie,act1,35:18.0,05:18.0
+p26,Wednesday,05-Jun,movie,Group-D,A00019,05-Jun,movie,act2,05:18.0,35:18.0
+p26,Wednesday,05-Jun,movie,Group-D,A00019,05-Jun,movie,act3,35:18.0,05:18.0
+p26,Wednesday,05-Jun,movie,Group-D,A00019,05-Jun,movie,act4,05:18.0,35:18.0
+p27,Wednesday,05-Jun,movie,Group-D,A00100,05-Jun,movie,act1,35:18.0,05:18.0
+p27,Wednesday,05-Jun,movie,Group-D,A00100,05-Jun,movie,act2,05:18.0,35:18.0
+p27,Wednesday,05-Jun,movie,Group-D,A00100,05-Jun,movie,act3,35:18.0,05:18.0
+p27,Wednesday,05-Jun,movie,Group-D,A00100,05-Jun,movie,act4,05:18.0,35:18.0
+p28,Wednesday,05-Jun,movie,Group-D,A000EE,05-Jun,movie,act1,35:18.0,05:18.0
+p28,Wednesday,05-Jun,movie,Group-D,A000EE,05-Jun,movie,act2,05:18.0,35:18.0
+p28,Wednesday,05-Jun,movie,Group-D,A000EE,05-Jun,movie,act3,35:18.0,05:18.0
+p28,Wednesday,05-Jun,movie,Group-D,A000EE,05-Jun,movie,act4,05:18.0,35:18.0
+p29,Wednesday,05-Jun,movie,Group-D,A003FE,05-Jun,movie,act1,35:18.0,05:18.0
+p29,Wednesday,05-Jun,movie,Group-D,A003FE,05-Jun,movie,act2,05:18.0,35:18.0
+p29,Wednesday,05-Jun,movie,Group-D,A003FE,05-Jun,movie,act3,35:18.0,05:18.0
+p29,Wednesday,05-Jun,movie,Group-D,A003FE,05-Jun,movie,act4,05:18.0,35:18.0
+p30,Wednesday,05-Jun,movie,Group-D,A0009E,05-Jun,movie,act1,35:18.0,05:18.0
+p30,Wednesday,05-Jun,movie,Group-D,A0009E,05-Jun,movie,act2,05:18.0,35:18.0
+p30,Wednesday,05-Jun,movie,Group-D,A0009E,05-Jun,movie,act3,35:18.0,05:18.0
+p30,Wednesday,05-Jun,movie,Group-D,A0009E,05-Jun,movie,act4,05:18.0,35:18.0
+p31,Wednesday,05-Jun,movie,Group-E,A00062,05-Jun,movie,act1,35:18.0,05:18.0
+p31,Wednesday,05-Jun,movie,Group-E,A00062,05-Jun,movie,act2,05:18.0,35:18.0
+p31,Wednesday,05-Jun,movie,Group-E,A00062,05-Jun,movie,act3,35:18.0,05:18.0
+p31,Wednesday,05-Jun,movie,Group-E,A00062,05-Jun,movie,act4,05:18.0,35:18.0
+p32,Wednesday,05-Jun,movie,Group-E,A001CF,05-Jun,movie,act1,35:18.0,05:18.0
+p32,Wednesday,05-Jun,movie,Group-E,A001CF,05-Jun,movie,act2,05:18.0,35:18.0
+p32,Wednesday,05-Jun,movie,Group-E,A001CF,05-Jun,movie,act3,35:18.0,05:18.0
+p32,Wednesday,05-Jun,movie,Group-E,A001CF,05-Jun,movie,act4,05:18.0,35:18.0
+p33,Wednesday,05-Jun,movie,Group-E,A00217,05-Jun,movie,act1,35:18.0,05:18.0
+p33,Wednesday,05-Jun,movie,Group-E,A00217,05-Jun,movie,act2,05:18.0,35:18.0
+p33,Wednesday,05-Jun,movie,Group-E,A00217,05-Jun,movie,act3,35:18.0,05:18.0
+p33,Wednesday,05-Jun,movie,Group-E,A00217,05-Jun,movie,act4,05:18.0,35:18.0
+p34,Wednesday,05-Jun,movie,Group-E,A00044,05-Jun,movie,act1,35:18.0,05:18.0
+p34,Wednesday,05-Jun,movie,Group-E,A00044,05-Jun,movie,act2,05:18.0,35:18.0
+p34,Wednesday,05-Jun,movie,Group-E,A00044,05-Jun,movie,act3,35:18.0,05:18.0
+p34,Wednesday,05-Jun,movie,Group-E,A00044,05-Jun,movie,act4,05:18.0,35:18.0
+p35,Wednesday,05-Jun,movie,Group-E,A0000D,05-Jun,movie,act1,35:18.0,05:18.0
+p35,Wednesday,05-Jun,movie,Group-E,A0000D,05-Jun,movie,act2,05:18.0,35:18.0
+p35,Wednesday,05-Jun,movie,Group-E,A0000D,05-Jun,movie,act3,35:18.0,05:18.0
+p35,Wednesday,05-Jun,movie,Group-E,A0000D,05-Jun,movie,act4,05:18.0,35:18.0
+p36,Wednesday,05-Jun,movie,Group-D,A001F4,05-Jun,movie,act1,35:18.0,05:18.0
+p36,Wednesday,05-Jun,movie,Group-D,A001F4,05-Jun,movie,act2,05:18.0,35:18.0
+p36,Wednesday,05-Jun,movie,Group-D,A001F4,05-Jun,movie,act3,35:18.0,05:18.0
+p36,Wednesday,05-Jun,movie,Group-D,A001F4,05-Jun,movie,act4,05:18.0,35:18.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,movie,act1,42:01.0,12:01.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,movie,act2,12:01.0,42:01.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,movie,act3,42:01.0,12:01.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,movie,act4,12:01.0,42:01.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p37,Thursday,06-Jun,movie,Individual,A0002B,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,movie,act1,42:01.0,12:01.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,movie,act2,12:01.0,42:01.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,movie,act3,42:01.0,12:01.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,movie,act4,12:01.0,42:01.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p38,Thursday,06-Jun,movie,Individual,A00062,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,movie,act1,42:01.0,12:01.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,movie,act2,12:01.0,42:01.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,movie,act3,42:01.0,12:01.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,movie,act4,12:01.0,42:01.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p39,Thursday,06-Jun,movie,Group-G,A001A6,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,movie,act1,42:01.0,12:01.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,movie,act2,12:01.0,42:01.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,movie,act3,42:01.0,12:01.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,movie,act4,12:01.0,42:01.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p40,Thursday,06-Jun,movie,Group-G,A00132,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,movie,act1,42:01.0,12:01.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,movie,act2,12:01.0,42:01.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,movie,act3,42:01.0,12:01.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,movie,act4,12:01.0,42:01.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p41,Thursday,06-Jun,movie,Individual,A00019,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,movie,act1,42:01.0,12:01.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,movie,act2,12:01.0,42:01.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,movie,act3,42:01.0,12:01.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,movie,act4,12:01.0,42:01.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p42,Thursday,06-Jun,movie,Individual,A0005A,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,movie,act1,42:01.0,12:01.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,movie,act2,12:01.0,42:01.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,movie,act3,42:01.0,12:01.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,movie,act4,12:01.0,42:01.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p43,Thursday,06-Jun,movie,Individual,A001CF,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,movie,act1,42:01.0,12:01.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,movie,act2,12:01.0,42:01.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,movie,act3,42:01.0,12:01.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,movie,act4,12:01.0,42:01.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p44,Thursday,06-Jun,movie,Individual,A0009E,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,movie,act1,42:01.0,12:01.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,movie,act2,12:01.0,42:01.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,movie,act3,42:01.0,12:01.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,movie,act4,12:01.0,42:01.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p45,Thursday,06-Jun,movie,Individual,A00213,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,movie,act1,42:01.0,12:01.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,movie,act2,12:01.0,42:01.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,movie,act3,42:01.0,12:01.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,movie,act4,12:01.0,42:01.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p46,Thursday,06-Jun,movie,Individual,A001F0,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,movie,act1,42:01.0,12:01.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,movie,act2,12:01.0,42:01.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,movie,act3,42:01.0,12:01.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,movie,act4,12:01.0,42:01.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p47,Thursday,06-Jun,movie,Individual,A00100,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,movie,act1,42:01.0,12:01.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,movie,act2,12:01.0,42:01.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,movie,act3,42:01.0,12:01.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,movie,act4,12:01.0,42:01.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p48,Thursday,06-Jun,movie,No show,,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,movie,act1,42:01.0,12:01.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,movie,act2,12:01.0,42:01.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,movie,act3,42:01.0,12:01.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,movie,act4,12:01.0,42:01.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p49,Thursday,06-Jun,movie,Individual,A001D6,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,movie,act1,42:01.0,12:01.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,movie,act2,12:01.0,42:01.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,movie,act3,42:01.0,12:01.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,movie,act4,12:01.0,42:01.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p50,Thursday,06-Jun,movie,Individual,A001F4,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,movie,act1,42:01.0,12:01.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,movie,act2,12:01.0,42:01.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,movie,act3,42:01.0,12:01.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,movie,act4,12:01.0,42:01.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p51,Thursday,06-Jun,movie,Individual,A0000D,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,movie,act1,42:01.0,12:01.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,movie,act2,12:01.0,42:01.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,movie,act3,42:01.0,12:01.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,movie,act4,12:01.0,42:01.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p52,Thursday,06-Jun,movie,Group-F,A000EE,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,movie,act1,42:01.0,12:01.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,movie,act2,12:01.0,42:01.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,movie,act3,42:01.0,12:01.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,movie,act4,12:01.0,42:01.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,trailer,Farmegeddon,37:45.0,38:51.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,trailer,Lego Playmobil,36:44.0,37:45.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,trailer,Men in Black,30:17.0,31:51.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,trailer,Toy Story 4,31:51.0,33:30.0
+p53,Thursday,06-Jun,movie,Group-F,A003FE,06-Jun,trailer,XMen Dark Phoenix,28:49.0,30:17.0
+p54,Monday,10-Jun,book,Individual,A001CF,10-Jun,book,act1,51:04.0,20:59.0
+p54,Monday,10-Jun,book,Individual,A001CF,10-Jun,book,act2,20:59.0,50:54.0
+p54,Monday,10-Jun,book,Individual,A001CF,10-Jun,book,act3,50:54.0,20:49.0
+p54,Monday,10-Jun,book,Individual,A001CF,10-Jun,book,act4,20:49.0,50:44.0
+p55,Monday,10-Jun,book,Individual,A001F4,10-Jun,book,act1,51:04.0,20:59.0
+p55,Monday,10-Jun,book,Individual,A001F4,10-Jun,book,act2,20:59.0,50:54.0
+p55,Monday,10-Jun,book,Individual,A001F4,10-Jun,book,act3,50:54.0,20:49.0
+p55,Monday,10-Jun,book,Individual,A001F4,10-Jun,book,act4,20:49.0,50:44.0
+p56,Monday,10-Jun,book,Individual,A0000D,10-Jun,book,act1,51:04.0,20:59.0
+p56,Monday,10-Jun,book,Individual,A0000D,10-Jun,book,act2,20:59.0,50:54.0
+p56,Monday,10-Jun,book,Individual,A0000D,10-Jun,book,act3,50:54.0,20:49.0
+p56,Monday,10-Jun,book,Individual,A0000D,10-Jun,book,act4,20:49.0,50:44.0
+p57,Monday,10-Jun,book,Individual,A0009E,10-Jun,book,act1,51:04.0,20:59.0
+p57,Monday,10-Jun,book,Individual,A0009E,10-Jun,book,act2,20:59.0,50:54.0
+p57,Monday,10-Jun,book,Individual,A0009E,10-Jun,book,act3,50:54.0,20:49.0
+p57,Monday,10-Jun,book,Individual,A0009E,10-Jun,book,act4,20:49.0,50:44.0
+p58,Monday,10-Jun,book,Individual,A0002B,10-Jun,book,act1,51:04.0,20:59.0
+p58,Monday,10-Jun,book,Individual,A0002B,10-Jun,book,act2,20:59.0,50:54.0
+p58,Monday,10-Jun,book,Individual,A0002B,10-Jun,book,act3,50:54.0,20:49.0
+p58,Monday,10-Jun,book,Individual,A0002B,10-Jun,book,act4,20:49.0,50:44.0
+p59,Monday,10-Jun,book,Individual,A000EE,10-Jun,book,act1,51:04.0,20:59.0
+p59,Monday,10-Jun,book,Individual,A000EE,10-Jun,book,act2,20:59.0,50:54.0
+p59,Monday,10-Jun,book,Individual,A000EE,10-Jun,book,act3,50:54.0,20:49.0
+p59,Monday,10-Jun,book,Individual,A000EE,10-Jun,book,act4,20:49.0,50:44.0
+p60,Monday,10-Jun,book,Individual,A001F0,10-Jun,book,act1,51:04.0,20:59.0
+p60,Monday,10-Jun,book,Individual,A001F0,10-Jun,book,act2,20:59.0,50:54.0
+p60,Monday,10-Jun,book,Individual,A001F0,10-Jun,book,act3,50:54.0,20:49.0
+p60,Monday,10-Jun,book,Individual,A001F0,10-Jun,book,act4,20:49.0,50:44.0
+p61,Monday,10-Jun,book,Individual,A00062,10-Jun,book,act1,51:04.0,20:59.0
+p61,Monday,10-Jun,book,Individual,A00062,10-Jun,book,act2,20:59.0,50:54.0
+p61,Monday,10-Jun,book,Individual,A00062,10-Jun,book,act3,50:54.0,20:49.0
+p61,Monday,10-Jun,book,Individual,A00062,10-Jun,book,act4,20:49.0,50:44.0
+p62,Monday,10-Jun,book,Individual,A00019,10-Jun,book,act1,51:04.0,20:59.0
+p62,Monday,10-Jun,book,Individual,A00019,10-Jun,book,act2,20:59.0,50:54.0
+p62,Monday,10-Jun,book,Individual,A00019,10-Jun,book,act3,50:54.0,20:49.0
+p62,Monday,10-Jun,book,Individual,A00019,10-Jun,book,act4,20:49.0,50:44.0
+p63,Monday,10-Jun,book,Individual,A00044,10-Jun,book,act1,51:04.0,20:59.0
+p63,Monday,10-Jun,book,Individual,A00044,10-Jun,book,act2,20:59.0,50:54.0
+p63,Monday,10-Jun,book,Individual,A00044,10-Jun,book,act3,50:54.0,20:49.0
+p63,Monday,10-Jun,book,Individual,A00044,10-Jun,book,act4,20:49.0,50:44.0
+p64,Monday,10-Jun,book,Individual,A001D6,10-Jun,book,act1,51:04.0,20:59.0
+p64,Monday,10-Jun,book,Individual,A001D6,10-Jun,book,act2,20:59.0,50:54.0
+p64,Monday,10-Jun,book,Individual,A001D6,10-Jun,book,act3,50:54.0,20:49.0
+p64,Monday,10-Jun,book,Individual,A001D6,10-Jun,book,act4,20:49.0,50:44.0
+p65,Monday,10-Jun,book,Individual,A001A6,10-Jun,book,act1,51:04.0,20:59.0
+p65,Monday,10-Jun,book,Individual,A001A6,10-Jun,book,act2,20:59.0,50:54.0
+p65,Monday,10-Jun,book,Individual,A001A6,10-Jun,book,act3,50:54.0,20:49.0
+p65,Monday,10-Jun,book,Individual,A001A6,10-Jun,book,act4,20:49.0,50:44.0
+p66,Monday,11-Jun,book,Individual,A00132,10-Jun,book,act1,51:04.0,20:59.0
+p66,Monday,11-Jun,book,Individual,A00132,10-Jun,book,act2,20:59.0,50:54.0
+p66,Monday,11-Jun,book,Individual,A00132,10-Jun,book,act3,50:54.0,20:49.0
+p66,Monday,11-Jun,book,Individual,A00132,10-Jun,book,act4,20:49.0,50:44.0
+p67,Tuesday,11-Jun,book,Individual,A001CF,11-Jun,book,act1,33:30.0,03:29.5
+p67,Tuesday,11-Jun,book,Individual,A001CF,11-Jun,book,act2,03:29.5,33:29.0
+p67,Tuesday,11-Jun,book,Individual,A001CF,11-Jun,book,act3,33:29.0,03:28.5
+p67,Tuesday,11-Jun,book,Individual,A001CF,11-Jun,book,act4,03:28.5,33:28.0
+p68,Tuesday,11-Jun,book,Individual,A0009E,11-Jun,book,act1,33:30.0,03:29.5
+p68,Tuesday,11-Jun,book,Individual,A0009E,11-Jun,book,act2,03:29.5,33:29.0
+p68,Tuesday,11-Jun,book,Individual,A0009E,11-Jun,book,act3,33:29.0,03:28.5
+p68,Tuesday,11-Jun,book,Individual,A0009E,11-Jun,book,act4,03:28.5,33:28.0
+p69,Tuesday,11-Jun,book,Individual,A0000D,11-Jun,book,act1,33:30.0,03:29.5
+p69,Tuesday,11-Jun,book,Individual,A0000D,11-Jun,book,act2,03:29.5,33:29.0
+p69,Tuesday,11-Jun,book,Individual,A0000D,11-Jun,book,act3,33:29.0,03:28.5
+p69,Tuesday,11-Jun,book,Individual,A0000D,11-Jun,book,act4,03:28.5,33:28.0
+p70,Tuesday,11-Jun,book,Individual,A000EE,11-Jun,book,act1,33:30.0,03:29.5
+p70,Tuesday,11-Jun,book,Individual,A000EE,11-Jun,book,act2,03:29.5,33:29.0
+p70,Tuesday,11-Jun,book,Individual,A000EE,11-Jun,book,act3,33:29.0,03:28.5
+p70,Tuesday,11-Jun,book,Individual,A000EE,11-Jun,book,act4,03:28.5,33:28.0
+p71,Tuesday,11-Jun,book,Individual,A00132,11-Jun,book,act1,33:30.0,03:29.5
+p71,Tuesday,11-Jun,book,Individual,A00132,11-Jun,book,act2,03:29.5,33:29.0
+p71,Tuesday,11-Jun,book,Individual,A00132,11-Jun,book,act3,33:29.0,03:28.5
+p71,Tuesday,11-Jun,book,Individual,A00132,11-Jun,book,act4,03:28.5,33:28.0
+p72,Tuesday,11-Jun,book,Individual,A001D6,11-Jun,book,act1,33:30.0,03:29.5
+p72,Tuesday,11-Jun,book,Individual,A001D6,11-Jun,book,act2,03:29.5,33:29.0
+p72,Tuesday,11-Jun,book,Individual,A001D6,11-Jun,book,act3,33:29.0,03:28.5
+p72,Tuesday,11-Jun,book,Individual,A001D6,11-Jun,book,act4,03:28.5,33:28.0
+p73,Tuesday,11-Jun,book,Individual,A00062,11-Jun,book,act1,33:30.0,03:29.5
+p73,Tuesday,11-Jun,book,Individual,A00062,11-Jun,book,act2,03:29.5,33:29.0
+p73,Tuesday,11-Jun,book,Individual,A00062,11-Jun,book,act3,33:29.0,03:28.5
+p73,Tuesday,11-Jun,book,Individual,A00062,11-Jun,book,act4,03:28.5,33:28.0
+p74,Tuesday,11-Jun,book,Individual,A0002B,11-Jun,book,act1,33:30.0,03:29.5
+p74,Tuesday,11-Jun,book,Individual,A0002B,11-Jun,book,act2,03:29.5,33:29.0
+p74,Tuesday,11-Jun,book,Individual,A0002B,11-Jun,book,act3,33:29.0,03:28.5
+p74,Tuesday,11-Jun,book,Individual,A0002B,11-Jun,book,act4,03:28.5,33:28.0
+p75,Tuesday,11-Jun,book,Individual,A00044,11-Jun,book,act1,33:30.0,03:29.5
+p75,Tuesday,11-Jun,book,Individual,A00044,11-Jun,book,act2,03:29.5,33:29.0
+p75,Tuesday,11-Jun,book,Individual,A00044,11-Jun,book,act3,33:29.0,03:28.5
+p75,Tuesday,11-Jun,book,Individual,A00044,11-Jun,book,act4,03:28.5,33:28.0
+p76,Tuesday,11-Jun,book,Individual,A00019,11-Jun,book,act1,33:30.0,03:29.5
+p76,Tuesday,11-Jun,book,Individual,A00019,11-Jun,book,act2,03:29.5,33:29.0
+p76,Tuesday,11-Jun,book,Individual,A00019,11-Jun,book,act3,33:29.0,03:28.5
+p76,Tuesday,11-Jun,book,Individual,A00019,11-Jun,book,act4,03:28.5,33:28.0
+p77,Tuesday,11-Jun,book,Individual,A001F4,11-Jun,book,act1,33:30.0,03:29.5
+p77,Tuesday,11-Jun,book,Individual,A001F4,11-Jun,book,act2,03:29.5,33:29.0
+p77,Tuesday,11-Jun,book,Individual,A001F4,11-Jun,book,act3,33:29.0,03:28.5
+p77,Tuesday,11-Jun,book,Individual,A001F4,11-Jun,book,act4,03:28.5,33:28.0
+p78,Tuesday,11-Jun,book,Individual,A0010B,11-Jun,book,act1,33:30.0,03:29.5
+p78,Tuesday,11-Jun,book,Individual,A0010B,11-Jun,book,act2,03:29.5,33:29.0
+p78,Tuesday,11-Jun,book,Individual,A0010B,11-Jun,book,act3,33:29.0,03:28.5
+p78,Tuesday,11-Jun,book,Individual,A0010B,11-Jun,book,act4,03:28.5,33:28.0
+p79,Tuesday,11-Jun,book,Individual,A001F0,11-Jun,book,act1,33:30.0,03:29.5
+p79,Tuesday,11-Jun,book,Individual,A001F0,11-Jun,book,act2,03:29.5,33:29.0
+p79,Tuesday,11-Jun,book,Individual,A001F0,11-Jun,book,act3,33:29.0,03:28.5
+p79,Tuesday,11-Jun,book,Individual,A001F0,11-Jun,book,act4,03:28.5,33:28.0

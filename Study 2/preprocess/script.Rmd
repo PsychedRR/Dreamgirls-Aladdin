@@ -1,0 +1,228 @@
+---
+title: "Aladdin processor"
+author: "RR"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(eyethinkphysiosync)
+library(eyethinkdata)
+library(tidyverse)
+```
+
+```{r}
+physio <- empatica_compile(edv = c("HR"), datafolder = 'C:/Users/yuech/Desktop/Dreamgirl/aladdin data/audience_physiosync/alladin vue/raw data/e4')
+```
+
+```{r}
+
+physio$sinfo <- physio$sinfo %>% mutate(trecon = '0') %>%setDT()
+td_sinfo <- physio$sinfo %>% as.data.frame()
+
+td_processed <- read.csv('C:/Users/yuech/Desktop/Dreamgirl/aladdin data/audience_physiosync/alladin vue/processed data/trial_data_narrower.csv')
+
+?read.csv
+```
+
+```{r}
+td_processed <- td_processed %>% select(pid, day, Date, condition, social, eid, type, content, starttime, stoptime) %>% filter(type == 'movie'|type == 'book') %>% filter(content == 'act1')
+```
+
+```{r}
+td <- tribble(
+  ~day,       ~condition, ~starttime,              ~stoptime,
+  "Monday",   "movie",    "03/06/2019 19:37:00",   "03/06/2019 21:37:00",
+  "Tuesday",  "movie",    "04/06/2019 20:32:22",   "04/06/2019 22:32:22",
+  "Wednesday","movie",    "05/06/2019 20:35:18",   "05/06/2019 22:35:18",
+  "Thursday", "movie",    "06/06/2019 19:42:01",   "06/06/2019 21:42:01",
+  "Monday",   "book",     "10/06/2019 17:51:04",   "10/06/2019 19:51:04",
+  "Tuesday",  "book",     "11/06/2019 17:33:30",   "11/06/2019 19:33:30"
+)
+
+# Parse datetimes and convert to Unix timestamps
+td <- td %>%
+  mutate(
+    starttime = dmy_hms(starttime) %>% as.numeric(),
+    stoptime  = dmy_hms(stoptime)  %>% as.numeric(),
+  )
+
+td_processed <- td_processed %>% select(-starttime, -stoptime) %>% left_join(td, by = c('condition', 'day'))
+
+td_processed <- td_processed %>% mutate(trecon = '0') %>% rename('stim' = 'Date')
+```
+
+
+```{r}
+merged_data <- new_merger(processed_emotibit = physio, td = td_processed %>% setDT(), hour_adjust = 1, condcols = c('condition', 'stim'))
+
+HR_syn <- crqa_full(data = merged_data, analyses = c('HR'), condcols = 'condition', pinfo = 'stim', delay = 12, embed = 2, rescale = 1, radius = 0.6,
+    normalize = 1, mindiagline = 10, minvertline = 10,
+    tw = 0, whiteline = FALSE, recpt = FALSE, side = "both",
+    threshold = 3, datatype = "numerical")
+
+saveout_datalist(HR_syn)
+```
+
+```{r}
+new_merger <- function (processed_emotibit = NULL, processed_gorilla = NULL, 
+  td = NULL, sinfo = NULL, pd = NULL, sd = NULL, ed = NULL, 
+  condcols = c("category", "condition", "item", "stim"), normlevel = 1, 
+  pinfo = NULL, gd = NULL, baseline = FALSE, hour_adjust = 0, 
+  stop_at_plotcheck = F, eda_check = list(mean = 20, range_min = 0.01, 
+    low = 0.03, high = 25)) 
+{
+  if (!is.null(processed_emotibit)) {
+    ed <- processed_emotibit$ed
+    sinfo <- processed_emotibit$sinfo
+  }
+  if (!is.null(processed_gorilla)) {
+    td <- copy(processed_gorilla$td)
+    pd <- processed_gorilla$pd
+    sd <- processed_gorilla$sd
+  }
+  ed$t <- ed$utc + hour_adjust * 3600 # if summer time
+  sinfo$utc_start <- sinfo$utc_start + hour_adjust * 3600
+  sinfo$utc_end <- sinfo$utc_end + hour_adjust * 3600
+  
+  dinfo <- c("pid", condcols)
+  if ("start_time" %in% colnames(td)) {
+    setnames(td, old = "start_time", new = "starttime")
+  }
+  if ("stop_time" %in% colnames(td)) {
+    setnames(td, old = "stop_time", new = "stoptime")
+  }
+  if (!"starttime" %in% colnames(td) | !"stoptime" %in% colnames(td)) {
+    return(cat("\nYou haven't got starttime and stoptime\n\n"))
+  }
+  if (!is.null(sinfo)) {
+    sinfo[, `:=`(day, strftime(time_start, format = "%m-%d")), 
+      by = time_start]
+    td[, `:=`(day, strftime(as.POSIXct(starttime, origin = "1970-01-01", 
+      tz = "Europe/London"), format = "%m-%d"))]
+    pdb <- td[, .(exp_begin = min(starttime), exp_end = max(stoptime)), 
+      by = .(pid, eid, day)]
+    sessiondata <- ggplot(pdb, aes(x = exp_begin, xend = exp_end, 
+      y = eid, yend = eid, label = pid)) + geom_segment(linewidth = 4, 
+      alpha = 1) + geom_text(size = 2, nudge_y = 0.5) + 
+      geom_segment(data = sinfo[filter == 1], inherit.aes = F, 
+        linewidth = 1.5, aes(y = eid, yend = eid, x = utc_start, 
+          xend = utc_end, colour = as.factor(trecon))) + 
+      facet_wrap(day ~ ., scales = "free_x") + theme_bw() + 
+      theme(legend.position = "none")
+    if (stop_at_plotcheck) {
+      return(sessiondata)
+    }
+    else {
+      print(sessiondata)
+    }
+  }
+  setkey(ed, t)
+  td <- data.frame(td)
+  if (length(dinfo) > 1) {
+    td$tid <- apply(td[, dinfo], 1, paste, collapse = "-")
+  }
+  else {
+    td$tid <- td[, dinfo]
+  }
+  if (normlevel == 1) {
+    td$nid <- td[, dinfo[1]]
+  }
+  else {
+    td$nid <- apply(td[, dinfo[1:normlevel]], 1, paste, 
+      collapse = "-")
+  }
+  td <- data.table(td)
+  grpn <- uniqueN(td$tid)
+  pb <- txtProgressBar(min = 0, max = grpn, style = 3)
+  emptrial <- td[, {
+    setTxtProgressBar(pb, .GRP)
+    ed[eid == .SD$eid & utc >= .SD$starttime & utc <= .SD$stoptime]
+  }, by = .(tid, nid)]
+  close(pb)
+  ed <- copy(pid_merge(emptrial, td[!duplicated(tid), .SD, 
+    .SDcols = c("tid", dinfo, pinfo)], link = "tid"))
+  setnames(ed, "V1", "raw")
+  ed[, `:=`(tt, as.numeric(t - min(t), units = "secs")), by = .(tid)]
+  if (!is.null(eda_check) & "EA" %in% unique(ed$dv)) {
+    pde <- ed[dv == "EA", .(mean = mean(raw, na.rm = T), 
+      range = max(raw, na.rm = T) - min(raw, na.mr = T), 
+      filter = 1), by = .(pid, eid)]
+    pde[mean > eda_check$mean | range < eda_check$range_min, 
+      `:=`(filter, 0)]
+    if (dim(pde[filter == 0])[1] > 0) {
+      cat("\nHere are people excluded because of high mean eda or low range:\n")
+      pde[filter == 0]
+    }
+    ed[dv == "EA" & pid %in% pde[filter == 0]$pid, `:=`(filter, 
+      0)]
+    ed[dv == "EA" & (raw > eda_check$high | raw < eda_check$low), 
+      `:=`(filter, 0)]
+  }
+  if (baseline == FALSE) {
+    ed[filter == 1, `:=`(norm, scale(raw)), by = .(nid, 
+      dv)]
+  }
+  else {
+    stop("I haven't implemented norming by baselines yet")
+  }
+  ed[, `:=`(ttsec, floor(tt))]
+  dm <- rbind(ed[filter == 1, .(metric = "raw", y = mean(raw, 
+    na.rm = T)), by = c(condcols, "dv", "ttsec")], ed[filter == 
+    1, .(metric = "norm", y = mean(norm, na.rm = T)), by = c(condcols, 
+    "dv", "ttsec")])
+  setnames(dm, c("ttsec", "dv"), c("t", "edv"))
+  ess <- rbind(ed[filter == 1, .(x = "raw", mean = mean(raw, 
+    na.rm = T), sd = sd(raw, na.rm = T), min = min(raw, 
+    na.rm = T), max = max(raw, na.rm = T), range = max(raw, 
+    na.rm = T) - min(raw, na.rm = T)), by = .(tid, dv)], 
+    ed[filter == 1, .(x = "norm", mean = mean(norm, na.rm = T), 
+      sd = sd(norm, na.rm = T), min = min(norm, na.rm = T), 
+      max = max(norm, na.rm = T), range = max(norm, na.rm = T) - 
+        min(norm, na.rm = T)), by = .(tid, dv)])
+  evars <- c("mean", "sd", "min", "max", "range")
+  td <- pid_merge(td, dcast(ess, tid ~ x + dv, value.var = evars), 
+    link = "tid")
+  td <- pid_merge(td, dcast(ed[, .(filterprop = mean(filter)), 
+    by = .(tid, dv)], tid ~ dv, value.var = "filterprop", 
+    ), link = "tid")
+  filter_vars <- paste0("filter_prop_", unique(ed$dv))
+  setnames(td, old = unique(ed$dv), new = filter_vars)
+  item_vars <- c(grep(x = colnames(td[, .SD, .SDcols = is.numeric]), 
+    pattern = "raw_", value = T), grep(x = colnames(td[, 
+    .SD, .SDcols = is.numeric]), pattern = "norm_", value = T))
+  item_means <- td[, lapply(.SD, mean, na.rm = T), .SDcols = item_vars, 
+    by = setdiff(dinfo, c("pid", pinfo))]
+  if (is.null(sd)) {
+    sd <- item_means
+  }
+  else {
+    sd <- pid_merge(sd, item_means, link = setdiff(dinfo, 
+      c("pid", pinfo)))
+  }
+  pd_vars <- c(grep(x = item_vars, pattern = "mean_raw", value = T), 
+    grep(x = item_vars, pattern = "range_raw", value = T), 
+    filter_vars)
+  pd_means <- td[, lapply(.SD, mean, na.rm = T), .SDcols = pd_vars, 
+    by = pid]
+  if (is.null(pd)) {
+    pd <- pd_means
+  }
+  else {
+    pd <- pid_merge(pd, pd_means)
+  }
+  if (!is.null(eda_check) & "EA" %in% unique(ed$dv)) {
+    edaplot <- mypirate(ed[dv == "EA"], dv = "raw", x_condition = "eid", 
+      colour_condition = "pid", legend = F, title = "EDA for each subject, split by sensor", 
+      dots = F) + geom_point(data = td, inherit.aes = F, 
+      aes(y = mean_raw_EA, x = eid, colour = pid)) + geom_hline(aes(yintercept = eda_check$mean)) + 
+      geom_label(data = td[, .(fpp = sprintf("%1.1f%%", 
+        100 * mean(filter_prop_EA))), by = .(pid, eid)], 
+        inherit.aes = F, aes(x = eid, colour = pid, 
+          label = fpp, y = mean(td$mean_raw_EA, na.rm = T)))
+    print(edaplot)
+  }
+  return(list(ed = ed, dm = dm, td = td, pd = pd, sd = sd))
+}
+```
+
